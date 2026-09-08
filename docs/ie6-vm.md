@@ -2,6 +2,8 @@
 
 2026-09-08 UTC, Microsoft 공식 평가판 설치 이미지로 새 VM에 Windows Server 2003 SP2를 설치했다. **실제 IE 6.0.3790.3959에서 여섯 화면·설정 조건의 탐색, 한글 검색 양식, 메뉴 줄바꿈과 가로 넘침 검사를 통과했다.** 스크립트를 켠 조건에서는 NeonUX-LC의 실제 VML 표면과 도형을 확인했다. 이 결과를 모든 IE6 환경의 호환 인증으로 해석하지 않는다.
 
+같은 설치 환경을 보존한 복제 VM에 Microsoft 공식 IE8 업데이트를 적용해 **실제 IE 8.0.6001.18702**에서도 같은 Classic 문서를 재검증했다. IE8의 `documentMode=8`, VML 표면, Hype·Swipe·Vine·Vive 경로, 한글 검색, 1024px와 320px 가로 넘침 없는 레이아웃을 확인했다. [IE8 1024px 결과](evidence/ie8-2026-09-08/1024-medium.txt), [IE8 320px 결과](evidence/ie8-2026-09-08/320-medium.txt), [IE8 텍스트 모드 결과](evidence/ie8-2026-09-08/320-script-disabled.txt)를 함께 보관한다.
+
 검증 대상은 Windows Server 2003 계열에 포함된 실제 IE6이다. Windows XP, 다른 IE6 서비스 팩, 실제 구형 하드웨어는 이 VM의 결과만으로 검증되지 않는다. 전체 지원 범위와 별도 출시 조건은 [호환성 문서](compatibility.md)를 따른다.
 
 ## 설치 이미지와 브라우저 근거
@@ -58,7 +60,7 @@ node scripts/vm/fixture-server.mjs
 
 Internet Explorer Enhanced Security Configuration은 기본 Internet 영역의 스크립트를 차단했다. 테스트 전용 `http://10.0.2.100`만 Trusted sites에 등록하고 IE를 다시 실행했다. 다음 표의 활성 조건은 해당 영역의 Active scripting이 Enable인 상태다. 비활성 조건은 Internet Options → Security → Trusted sites → Custom Level에서 **Active scripting을 Disable로 실제 변경**한 뒤 IE를 다시 실행했다. 마지막에는 원래 Enable 설정으로 복원하고 1024px 검사를 다시 통과했다. 일반 외부 네트워크 제한은 그대로 유지했다.
 
-각 실행은 홈, Thread, 직접 검색, 작품, 로그인 안내, 텍스트 모드 페이지를 검사하고, 실제 HTML 검색 양식에 `한글`을 넣어 GET 제출했다. 실제 요청의 `%ED%95%9C%EA%B8%80`과 검색 결과 제목을 확인했다. 로그인 화면은 보호되지 않은 HTTP에서 계정 기능이 제한된다는 안내를 검사했으며, 운영 인증이나 쓰기를 수행하지 않았다.
+각 IE6 실행은 홈, Thread, 직접 검색, 작품, 로그인 안내, 텍스트 모드 페이지를 검사하고, 실제 HTML 검색 양식에 `한글`을 넣어 GET 제출했다. IE8 실행은 평문 화면에서 숨겨진 계정 진입점을 확인하기 위해 `/hype`, `/swipe`, `/vine`, `/vive`를 추가로 검사했다. 실제 요청의 `%ED%95%9C%EA%B8%80`과 검색 결과 제목을 확인했으며, 운영 인증이나 쓰기를 수행하지 않았다.
 
 | IE 창 외부 폭 | 실제 문서 폭 | View → Text Size | Active scripting / 모드 | 결과·기록 |
 | --- | --- | --- | --- | --- |

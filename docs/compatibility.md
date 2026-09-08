@@ -10,7 +10,7 @@
 | --- | --- | --- | --- |
 | IE6 / Server 2003 SP2 | HTML 문서·링크·양식, 선택적 VML | 실제 IE 6.0.3790.3959에서 너비 320/480/800/1024px, Largest 320px, 한글 GET 검색, VML 표면·도형 관찰. [원본 결과](ie6-vm.md) | 보호된 로그인·쓰기·쿠키, 별도 서비스 팩, 실제 저사양 하드웨어 |
 | IE6 / Windows XP | HTML 문서·링크·양식, 선택적 VML | 배포 JS의 ES3 파싱, 클래식 API stub 테스트 | 실제 VM에서 레이아웃·VML·입력·문자 인코딩·쿠키 확인. XP용 브리지 별도 필요 |
-| IE7·IE8 | 같은 문서 구조, 가능한 경우 VML | UA 자동 분기, ES3와 VML fallback 계약 검사 | 해당 브라우저 엔진에서 실측 |
+| IE7·IE8 | 같은 문서 구조, 가능한 경우 VML | UA 자동 분기, ES3와 VML fallback 계약 검사. 실제 IE8에서 `documentMode=8`, 320/1024px, 제품 경로·한글 검색·텍스트 모드 통과. [IE8 결과](compatibility.md#ie8-실행-결과) | 실제 IE7 엔진에서 실측 |
 | IE9 | 같은 Classic 문서, canvas → VML → DOM | UA 자동 분기, ES3와 세 렌더러 계약 검사 | 실제 IE9 엔진에서 실측 |
 | IE10·IE11 | 같은 Classic 문서 | MSIE와 Trident UA 자동 분기 검사 | 실제 IE10·IE11 엔진에서 실측 |
 | canvas를 지원하는 현대 브라우저 | 같은 문서에 소형 canvas 장식 | canvas 선택·실패 fallback·자원 한도 자동 테스트 | OS·브라우저별 시각 및 입력 회귀 검사 |
@@ -73,5 +73,9 @@ CSS와 JS URL에는 두 파일의 내용에서 계산한 SHA-256을 함께 붙�
 - 키보드만 이용하는 전체 탐색과 실제 보조공학 도구.
 - 느린 네트워크·응답 실패·만료 세션에서의 실기기 동작, CPU·RAM 사용량.
 - Chromium의 긴 단어·표·글자 크기 회귀 조건 전체를 각각의 역사적 엔진에서 재검증.
+
+## IE8 실행 결과
+
+IE6와 동일한 격리 fixture를 IE8 복제 VM에서 열었다. 실행 파일과 MSHTML은 모두 `8.0.6001.18702`, JScript는 `5.8.18702`였고 모든 페이지가 `CSS1Compat` 및 `documentMode=8`을 보고했다. 1024px와 320px에서 홈·Thread·검색·작품·Hype·Swipe·Vine·Vive·텍스트 모드가 모두 `RESULT=PASS`였다. Active scripting을 끈 320px 텍스트 모드도 스크립트 없이 통과했다. [1024px 보고서](evidence/ie8-2026-09-08/1024-medium.txt) · [320px 보고서](evidence/ie8-2026-09-08/320-medium.txt) · [320px 스크린샷](evidence/ie8-2026-09-08/320-medium.png)
 
 영상·음악·게임과 DM의 제약은 [기능 표](features.md), 전송 보안과 XP 경계는 [보안 모델](security.md)을 따른다. IE for Mac, 모든 PDA·콘솔·임베디드 브라우저를 일괄 지원한다고 선언하지 않는다.

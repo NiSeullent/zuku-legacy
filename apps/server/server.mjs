@@ -13,8 +13,9 @@ function equal(a, b) {
   return left.length === right.length && timingSafeEqual(left, right);
 }
 /** The adapter, not the request URL, decides whether the accepted transport is HTTPS. */
-export function createStandaloneServer({app, publicOrigin, tls, ingressKey, modernOrigin='https://www.zuzunza.com', forceClassic=false}) {
+export function createStandaloneServer({app, publicOrigin, tls, ingressKey, modernOrigin='https://www.zuzunza.com', forceClassic=false, maxBodyBytes=LIMIT}) {
   const origin = new URL(publicOrigin);
+  if (!Number.isInteger(maxBodyBytes) || maxBodyBytes < 1024 || maxBodyBytes > 16 * 1024 * 1024) throw new Error('Invalid maxBodyBytes');
   let active = 0;
   async function serve(req, res) {
     const reject = (status, message) => { res.writeHead(status, {'Content-Type':'text/plain; charset=utf-8','Connection':'close'}); res.end(message); };
@@ -28,11 +29,11 @@ export function createStandaloneServer({app, publicOrigin, tls, ingressKey, mode
       res.writeHead(302,{'Location':destination.href,'Content-Length':'0','Vary':'User-Agent','Cache-Control':'no-store'});res.end();return;
     }
     const length = req.headers['content-length'];
-    if (length && (!/^\d+$/.test(length) || Number(length) > LIMIT)) return reject(413,'Request too large');
+    if (length && (!/^\d+$/.test(length) || Number(length) > maxBodyBytes)) return reject(413,'Request too large');
     const chunks = []; let size = 0;
     for await (const chunk of req) {
       size += chunk.length;
-      if (size > LIMIT) return reject(413,'Request too large');
+      if (size > maxBodyBytes) return reject(413,'Request too large');
       chunks.push(chunk);
     }
     if ((req.method === 'GET' || req.method === 'HEAD') && size) return reject(400,'GET/HEAD body is not supported');

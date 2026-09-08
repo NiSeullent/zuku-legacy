@@ -1,5 +1,5 @@
-' ZUKU Legacy: native IE6 fixture probe. ASCII source, WSH VBScript 5.x.
-' Usage: cscript //nologo ie6-probe.vbs [C:\local\ie6-report.txt] [320..1280] [auto|text]
+' ZUKU Legacy: native Internet Explorer fixture probe. ASCII source, WSH VBScript 5.x.
+' Usage: cscript //nologo ie6-probe.vbs [C:\local\ie-report.txt] [320..1280] [auto|text] [6..11]
 ' Only the fixed fixture origin is navigated. No security settings are changed.
 Option Explicit
 
@@ -7,7 +7,7 @@ Const FixtureOrigin = "http://10.0.2.100"
 Const MaxPolls = 300
 Dim Browser, FileSystem, ReportFile, Failures, Warnings, OutputPath
 Dim NavigationBlocked, LastNavigationError
-Dim RequestedWidth, ProbeMode, ExpectedPageScripts
+Dim RequestedWidth, ProbeMode, ExpectedPageScripts, ExpectedBrowserMajor
 Failures = 0
 Warnings = 0
 NavigationBlocked = False
@@ -15,6 +15,7 @@ LastNavigationError = ""
 RequestedWidth = 1024
 ProbeMode = "auto"
 ExpectedPageScripts = 1
+ExpectedBrowserMajor = "6"
 Set Browser = Nothing
 Set ReportFile = Nothing
 
@@ -305,7 +306,7 @@ Sub InspectUserAgent(label, document)
         Warn label & ".navigator.userAgent unavailable: COM " & errorNumber & " " & errorText
     Else
         WriteReport label & ".userAgent", userAgent
-        AssertTrue InStr(userAgent, "MSIE 6.") > 0, label & ".native IE6 user agent"
+        AssertTrue InStr(userAgent, "MSIE " & ExpectedBrowserMajor & ".") > 0, label & ".native IE" & ExpectedBrowserMajor & " user agent"
     End If
 End Sub
 
@@ -356,7 +357,7 @@ End Sub
 Sub InspectPage(label, expectedPath, expectedScripts)
     Dim document, headings, scripts, node, index, source, address, html
     Dim canonicalLinks, internalLinks, width, scrollWidth, bodyWidth, windowWidth
-    Dim title, charset, heading, expectedHeading, scriptCount, headingCount, bodyMode, compatMode
+    Dim title, charset, heading, expectedHeading, scriptCount, headingCount, bodyMode, compatMode, documentMode
     On Error Resume Next
     Set document = Browser.Document
     CheckCom label & ".Document"
@@ -374,6 +375,8 @@ Sub InspectPage(label, expectedPath, expectedScripts)
     CheckCom label & ".charset"
     compatMode = document.compatMode
     CheckCom label & ".compatMode"
+    documentMode = TextValue(document.documentMode)
+    Err.Clear
     scriptCount = scripts.length
     CheckCom label & ".script count"
     headingCount = headings.length
@@ -386,6 +389,7 @@ Sub InspectPage(label, expectedPath, expectedScripts)
     WriteReport label & ".title", title
     WriteReport label & ".charset", charset
     WriteReport label & ".compatMode", compatMode
+    WriteReport label & ".documentMode", documentMode
     WriteReport label & ".scriptCount", scriptCount
     WriteReport label & ".mode", bodyMode
     AssertTrue IsFixtureURL(address) And URLPath(address) = expectedPath, label & ".canonical URL"
@@ -393,6 +397,7 @@ Sub InspectPage(label, expectedPath, expectedScripts)
     AssertTrue InStr(title, "ZUKU Legacy") > 0, label & ".Legacy document title"
     AssertTrue LCase(charset) = "utf-8", label & ".UTF-8 document charset"
     AssertTrue compatMode = "CSS1Compat", label & ".HTML standards layout mode"
+    If CLng(ExpectedBrowserMajor) >= 8 Then AssertTrue documentMode = ExpectedBrowserMajor, label & ".expected document mode"
     AssertTrue headingCount = 1, label & ".one main heading"
     heading = ""
     On Error Resume Next
@@ -408,8 +413,14 @@ Sub InspectPage(label, expectedPath, expectedScripts)
             expectedHeading = UnicodeText("C9C0 AE08 002C 0020 B098 B204 ACE0 0020 C2F6 C740 0020 C774 C57C AE30")
         Case "content"
             expectedHeading = UnicodeText("C791 C740 0020 D654 BA74 C5D0 0020 B2F4 C740 0020 B113 C740 0020 C138 ACC4")
-        Case "login"
-            expectedHeading = UnicodeText("C548 C804 D55C 0020 C5F0 ACB0 BD80 D130 0020 C2DC C791 D574 C694")
+        Case "hype"
+            expectedHeading = "Hype"
+        Case "swipe"
+            expectedHeading = "Swipe"
+        Case "vine"
+            expectedHeading = "Vine"
+        Case "vive"
+            expectedHeading = "Vive"
         Case "direct-search", "native-search"
             expectedHeading = ChrW(&H201C) & ChrW(&HD55C) & ChrW(&HAE00) & UnicodeText("201D 0020 AC80 C0C9 0020 ACB0 ACFC")
     End Select
@@ -492,6 +503,33 @@ Sub CheckPublicLogin()
     AssertTrue passwordCount = 0 And postCount = 0, "unprotected HTTP has no account mutation form"
 End Sub
 
+Sub UploadReport()
+    Dim stream, request, bytes, statusCode, errorNumber, errorText
+    On Error Resume Next
+    Set stream = CreateObject("ADODB.Stream")
+    stream.Type = 1
+    stream.Open
+    stream.LoadFromFile OutputPath
+    bytes = stream.Read
+    stream.Close
+    Set request = CreateObject("MSXML2.XMLHTTP")
+    request.Open "POST", FixtureOrigin & "/legacy/__qa/results", False
+    request.setRequestHeader "Content-Type", "application/octet-stream"
+    request.Send bytes
+    errorNumber = Err.Number
+    errorText = Err.Description
+    If errorNumber <> 0 Then
+        Warn "report upload failed: COM " & errorNumber & " " & errorText
+    Else
+        statusCode = request.Status
+        If statusCode <> 200 Then Warn "report upload returned HTTP " & statusCode
+    End If
+    Set request = Nothing
+    Set stream = Nothing
+    Err.Clear
+    On Error GoTo 0
+End Sub
+
 Sub SubmitKoreanSearch(query)
     Dim document, input, form, address, heading, resultWords, formAction, formMethod
     NavigateFixture "search-form-home", "/"
@@ -539,8 +577,8 @@ Sub Main()
         WScript.Echo "Run this probe from a command prompt: cscript //nologo ie6-probe.vbs"
         WScript.Quit 2
     End If
-    If WScript.Arguments.Count > 3 Then
-        WScript.Echo "Usage: cscript //nologo ie6-probe.vbs [C:\local\ie6-report.txt] [320..1280] [auto|text]"
+    If WScript.Arguments.Count > 4 Then
+        WScript.Echo "Usage: cscript //nologo ie6-probe.vbs [C:\local\ie-report.txt] [320..1280] [auto|text] [6..11]"
         WScript.Quit 2
     End If
     If WScript.Arguments.Count >= 2 Then
@@ -558,6 +596,11 @@ Sub Main()
         If ProbeMode <> "auto" And ProbeMode <> "text" Then Fatal "Display mode must be auto or text"
         If ProbeMode = "text" Then ExpectedPageScripts = 0
     End If
+    If WScript.Arguments.Count >= 4 Then
+        ExpectedBrowserMajor = CStr(WScript.Arguments(3))
+        If Not IsNumeric(ExpectedBrowserMajor) Then Fatal "Expected browser major must be 6..11"
+        If CLng(ExpectedBrowserMajor) < 6 Or CLng(ExpectedBrowserMajor) > 11 Then Fatal "Expected browser major must be 6..11"
+    End If
     On Error Resume Next
     Set FileSystem = CreateObject("Scripting.FileSystemObject")
     CheckCom "Create FileSystemObject"
@@ -573,7 +616,7 @@ Sub Main()
     If drive.DriveType = 3 Then Fatal "Report output cannot use a network drive"
     Set ReportFile = FileSystem.CreateTextFile(OutputPath, True, True)
     CheckCom "Create local UTF-16 report"
-    WriteReport "probe", "ZUKU Legacy native IE6 fixture checks"
+    WriteReport "probe", "ZUKU Legacy native IE" & ExpectedBrowserMajor & " fixture checks"
     WriteReport "fixtureOrigin", FixtureOrigin
     WriteReport "startedLocalTime", Now
     WriteReport "reportEncoding", "UTF-16LE with BOM"
@@ -600,7 +643,7 @@ Sub Main()
     WriteReport "browser.executableVersion", executableVersion
     WriteReport "browser.mshtmlVersion", mshtmlVersion
     WriteReport "platform.kernel32Version", kernelVersion
-    AssertTrue Left(executableVersion, 2) = "6." And Left(mshtmlVersion, 2) = "6.", "native IE6 executable and MSHTML engine versions"
+    AssertTrue Left(executableVersion, Len(ExpectedBrowserMajor) + 1) = ExpectedBrowserMajor & "." And Left(mshtmlVersion, Len(ExpectedBrowserMajor) + 1) = ExpectedBrowserMajor & ".", "native IE" & ExpectedBrowserMajor & " executable and MSHTML engine versions"
     On Error GoTo 0
 
     query = ChrW(&HD55C) & ChrW(&HAE00)
@@ -612,9 +655,14 @@ Sub Main()
     InspectPage "direct-search", "/search", ExpectedPageScripts
     NavigateFixture "content", "/content/cnt_demo"
     InspectPage "content", "/content/cnt_demo", ExpectedPageScripts
-    NavigateFixture "login", "/login"
-    InspectPage "login", "/login", ExpectedPageScripts
-    CheckPublicLogin
+    NavigateFixture "hype", "/hype"
+    InspectPage "hype", "/hype", ExpectedPageScripts
+    NavigateFixture "swipe", "/swipe"
+    InspectPage "swipe", "/swipe", ExpectedPageScripts
+    NavigateFixture "vine", "/vine"
+    InspectPage "vine", "/vine", ExpectedPageScripts
+    NavigateFixture "vive", "/vive"
+    InspectPage "vive", "/vive", ExpectedPageScripts
     NavigateFixture "text", "/?mode=text"
     InspectPage "text", "/", 0
     SubmitKoreanSearch query
@@ -631,6 +679,8 @@ Sub Main()
     End If
     WriteReport "browserState", "Left visible on the fixture home page for a screenshot"
     ReportFile.Close
+    Set ReportFile = Nothing
+    UploadReport
     If Failures > 0 Then WScript.Quit 1
     WScript.Quit 0
 End Sub

@@ -74,11 +74,13 @@ test('unprotected requests ignore session cookies, bearer, claimed HTTPS URLs an
   assert.equal(app.calls[0]!.headers.has('authorization'), false);
   assert.equal(app.calls[0]!.headers.has('cookie'), false);
   const body = await feed.text();
-  assert.ok(body.includes('HTTP · 공개 열람'));
+  assert.ok(!body.includes('HTTP · 공개 열람'));
+  assert.ok(!body.includes('계정 작업에는'));
   assert.ok(!body.includes('연결 사용자'));
   assert.ok(!body.includes(TOKEN));
   assert.equal(feed.headers.has('set-cookie'), false);
   const connect = await app.handle(request('/connect', { headers }));
+  assert.equal(connect.status, 404);
   assert.equal(connect.headers.has('set-cookie'), false);
   const write = await app.handle(formRequest('/actions/post', { csrf: session.csrf, body: 'spoofed' }, sessionCookie(session), headers));
   assert.equal(write.status, 403);
@@ -96,7 +98,7 @@ test('forged bridge headers fail closed; a signed path/query proof works exactly
   const valid = await app.handle(new Request(PUBLIC + path, { headers: proof }));
   assert.equal(valid.status, 200);
   assert.ok(valid.headers.get('set-cookie')?.includes('HttpOnly'));
-  assert.ok((await valid.text()).includes('보안 브리지 연결'));
+  assert.ok((await valid.text()).includes('연결됨'));
   const replay = await app.handle(new Request(PUBLIC + path, { headers: proof }));
   assert.equal(replay.status, 403);
 });

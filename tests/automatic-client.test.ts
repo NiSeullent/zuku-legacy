@@ -72,7 +72,10 @@ test('IE6 opens the ordinary homepage with canonical navigation and internal enh
   assert.match(html, /<meta http-equiv="X-UA-Compatible" content="IE=edge">/);
   assert.ok(html.includes('href="/content/cnt_one"'));
   assert.ok(html.includes('href="/community"'));
-  assert.ok(html.includes('href="/login"'));
+  assert.ok(!html.includes('href="/login"'));
+  assert.ok(!html.includes('href="/bookmarks"'));
+  assert.ok(!html.includes('href="/messages"'));
+  assert.ok(!html.includes('보안 연결이 필요'));
   assert.ok(html.includes('action="/search"'));
   noInternalNavigation(html);
   assert.match(html, /<link[^>]+href="\/legacy\/assets\/neonux-lc\.css\?v=[a-f0-9]{64}"/);
@@ -160,7 +163,8 @@ test('matching host rewrites select canonical rendering without granting secure 
   assert.equal(response.status, 200);
   const html = await response.text();
   noInternalNavigation(html);
-  assert.ok(html.includes('HTTP · 공개 열람'));
+  assert.ok(!html.includes('HTTP · 공개 열람'));
+  assert.ok(!html.includes('계정 작업에는'));
   assert.equal(app.calls[0]!.authorization, null);
   const modern = await app.handle(req('/legacy/search?q=hello', { headers: { 'x-zuku-lc-original-path': '/search?q=hello' } }, MODERN_UA));
   assert.equal(modern.status, 404);
@@ -190,7 +194,7 @@ test('bridge proof authenticates the original canonical target across an interna
   const headers = { ...proof, 'x-zuku-lc-original-path': original };
   const response = await app.handle(req('/legacy/thread?cursor=post_next', { headers }, MODERN_UA));
   assert.equal(response.status, 200);
-  assert.ok((await response.text()).includes('보안 브리지 연결'));
+  assert.ok((await response.text()).includes('연결됨'));
   assert.equal(app.calls[0]!.url.pathname, '/api/v1/thread/posts');
   assert.equal(app.calls[0]!.url.searchParams.get('cursor'), 'post_next');
   const replay = await app.handle(req('/legacy/thread?cursor=post_next', { headers }, MODERN_UA));
@@ -290,12 +294,14 @@ test('public pairing and internal action forms keep the same visible account and
   assert.equal(await app.state.getSession(freshId), undefined);
 });
 
-test('public authenticated destinations redirect guests to normal login URLs', async () => {
+test('public authenticated destinations are hidden on plain HTTP', async () => {
   const app = appFixture();
   for (const path of ['/profile', '/bookmarks']) {
     const response = await app.handle(req(path));
-    assert.equal(response.status, 303);
-    assert.equal(response.headers.get('location'), '/login');
+    assert.equal(response.status, 404);
+    const html = await response.text();
+    assert.ok(!html.includes('계정 연결'));
+    assert.ok(!html.includes('보안 연결'));
   }
   assert.equal(app.calls.length, 0);
 });
