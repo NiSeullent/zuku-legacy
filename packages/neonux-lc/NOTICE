@@ -1,0 +1,10 @@
+NeonUX-LC is an independent presentation adapter for NeonUX.
+Semantic token snapshots in vendor/tokens.css and vendor/slate.css originate
+from NeonUX Core, Copyright 2026 NiSeullent, licensed under Apache-2.0.
+Pinned source: https://github.com/NiSeullent/neonux-core/tree/fbb3840af0076c580680fe9d8b90cf50a639ddc7
+Upstream license: vendor/LICENSE.
+
+The CSS and ES3 runtime in src/ and generated dist/ are new compatibility
+implementations. Generated assets substitute the upstream slate dark semantic
+values and retro system font stack; layout and rendering have been changed
+for classic browsers. No upstream React component code is bundled.

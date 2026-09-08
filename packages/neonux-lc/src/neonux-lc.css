@@ -1,0 +1,93 @@
+/* NeonUX-LC: CSS2 baseline; optional media queries improve newer small screens.
+ * Modified adaptation of NeonUX semantic tokens. See NOTICE and vendor/LICENSE.
+ * All {{token}} expressions compile to literals; none are shipped to browsers. */
+html { background: {{neon-canvas}}; color: {{neon-text-primary}}; }
+body { margin: 0; padding: 0; font: {{neon-text-sm}}/1.6 {{neon-font-retro}}; }
+a { color: {{neon-text-primary}}; text-decoration: underline; }
+a:hover, a:focus { color: {{neon-accent}}; }
+a:focus, input:focus, select:focus, textarea:focus, button:focus { outline: 2px solid {{neon-focus-color}}; outline-offset: 3px; }
+img { border: 0; max-width: 100%; height: auto; }
+form { margin: 0; }
+input, select, textarea, button { font: inherit; }
+h1, h2, h3, p, ul, ol { margin-top: 0; }
+h1 { margin-bottom: {{neon-space-2}}; font-size: {{neon-text-3xl}}; line-height: 1.3; }
+h2 { font-size: {{neon-text-xl}}; line-height: 1.4; }
+h3 { font-size: {{neon-text-lg}}; }
+.lc-page { background: {{neon-canvas}}; color: {{neon-text-primary}}; }
+.lc-shell { margin: 0 auto; padding: 0 {{neon-space-6}}; max-width: 1160px; }
+.lc-skip { display: block; padding: {{neon-space-1}} {{neon-space-4}}; color: {{neon-text-secondary}}; font-size: {{neon-text-xs}}; }
+.lc-header { padding: {{neon-space-5}} 0; border-bottom: 1px solid {{neon-border-subtle}}; }
+.lc-brand { display: block; margin-bottom: {{neon-space-3}}; font: bold 28px/1.2 Arial, sans-serif; letter-spacing: 2px; text-decoration: none; }
+.lc-brand-mark { color: {{neon-accent}}; }
+.lc-brand-small { margin-left: {{neon-space-2}}; color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; font-weight: normal; letter-spacing: 1px; }
+.lc-header-meta { margin: 0; color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; }
+.lc-header-actions { margin: {{neon-space-3}} 0 0; }
+.lc-layout { padding: {{neon-space-6}} 0; }
+.lc-sidebar { margin-bottom: {{neon-space-6}}; }
+.lc-nav { margin: 0; padding: 0; list-style: none; }
+.lc-nav li { margin: 0 0 {{neon-space-1}}; padding: 0; }
+.lc-nav a { display: block; padding: {{neon-space-3}} {{neon-space-4}}; border-left: 3px solid {{neon-border-subtle}}; text-decoration: none; color: {{neon-text-secondary}}; }
+.lc-nav a:hover { background: {{neon-surface-muted}}; color: {{neon-text-primary}}; }
+.lc-nav .lc-active, .lc-nav a.lc-active { background: {{neon-surface-muted}}; border-left-color: {{neon-accent}}; color: {{neon-text-primary}}; font-weight: bold; }
+.lc-main { overflow: hidden; }
+.lc-eyebrow { margin-bottom: {{neon-space-2}}; color: {{neon-accent}}; font-size: {{neon-text-xs}}; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+.lc-intro { margin-bottom: {{neon-space-6}}; color: {{neon-text-secondary}}; }
+.lc-hero { margin-bottom: {{neon-space-6}}; padding: {{neon-space-5}} 0 {{neon-space-2}}; }
+.lc-hero p { color: {{neon-text-secondary}}; }
+.lc-hero .lc-eyebrow { color: {{neon-accent}}; }
+.lc-muted { color: {{neon-text-muted}}; }
+.lc-small { font-size: {{neon-text-xs}}; }
+.lc-panel { margin-bottom: {{neon-space-5}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
+.lc-panel-header { padding: {{neon-space-4}} {{neon-space-5}}; border-bottom: 1px solid {{neon-border-subtle}}; }
+.lc-panel-title { margin: 0; font-size: {{neon-text-base}}; font-weight: bold; }
+.lc-panel-body { padding: {{neon-space-5}}; }
+.lc-panel-body p { margin-bottom: {{neon-space-3}}; }
+.lc-card-grid { overflow: hidden; }
+.lc-card { margin-bottom: {{neon-space-4}}; padding: {{neon-space-5}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
+.lc-card h2, .lc-card h3 { margin-bottom: {{neon-space-2}}; }
+.lc-card p { margin-bottom: {{neon-space-4}}; color: {{neon-text-secondary}}; }
+.lc-card-index { margin-bottom: {{neon-space-4}}; color: {{neon-accent}}; font: bold 24px/1 Arial, sans-serif; }
+.lc-badge { padding: 3px 7px; border: 1px solid {{neon-border-strong}}; font-size: {{neon-text-xs}}; color: {{neon-text-secondary}}; white-space: nowrap; }
+.lc-badge-accent { border-color: {{neon-accent}}; color: {{neon-accent}}; }
+.lc-button { display: inline-block; margin: 0 {{neon-space-2}} {{neon-space-2}} 0; padding: 10px 16px; border: 1px solid {{neon-border-strong}}; background: {{neon-surface-muted}}; color: {{neon-text-primary}}; font-weight: bold; line-height: 1.6; text-align: center; text-decoration: none; cursor: pointer; }
+.lc-button:hover, .lc-button:focus { border-color: {{neon-accent}}; color: {{neon-text-primary}}; }
+.lc-button-primary { border-color: {{neon-accent}}; background: {{neon-accent-hover}}; color: {{neon-text-on-accent}}; }
+.lc-button-primary:hover, .lc-button-primary:focus { background: {{neon-accent-hover}}; }
+.lc-label { display: block; margin-bottom: {{neon-space-2}}; font-weight: bold; }
+.lc-input { display: block; width: 90%; margin-bottom: {{neon-space-4}}; padding: 10px; border: 1px solid {{neon-border-strong}}; background: {{neon-canvas}}; color: {{neon-text-primary}}; }
+.lc-inline-form { margin-bottom: {{neon-space-4}}; }
+.lc-search { margin-bottom: {{neon-space-5}}; padding: {{neon-space-4}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
+.lc-search .lc-input { margin-bottom: {{neon-space-3}}; }
+.lc-search .lc-button { margin-bottom: 0; }
+.lc-pagination { clear: both; padding: {{neon-space-3}} 0; }
+.lc-notice { margin-bottom: {{neon-space-5}}; padding: {{neon-space-4}}; border: 1px solid {{neon-border-strong}}; border-left: 3px solid {{neon-accent}}; background: {{neon-surface-muted}}; color: {{neon-text-secondary}}; }
+.lc-notice p { margin: 0; }
+.lc-status { padding-top: {{neon-space-4}}; border-top: 1px solid {{neon-border-subtle}}; }
+.lc-graphic { margin-top: {{neon-space-2}}; }
+.lc-list { margin: 0; padding: 0; list-style: none; }
+.lc-list li { padding: {{neon-space-4}} 0; border-bottom: 1px solid {{neon-border-subtle}}; }
+.lc-list h2, .lc-list h3, .lc-list p { margin-bottom: {{neon-space-2}}; }
+.lc-data, .lc-table { width: 100%; border-collapse: collapse; }
+.lc-data th, .lc-data td, .lc-table th, .lc-table td { padding: {{neon-space-3}}; border-bottom: 1px solid {{neon-border-subtle}}; text-align: left; vertical-align: top; }
+.lc-data th, .lc-table th { color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; }
+.lc-footer { clear: both; margin-top: {{neon-space-6}}; padding: {{neon-space-5}} 0; border-top: 1px solid {{neon-border-subtle}}; color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; }
+.lc-footer a { color: {{neon-text-secondary}}; }
+.lc-clear { clear: both; }
+/* A stacked CSS2 baseline remains usable in IE6 and narrow classic viewports.
+ * Only browsers that support media queries receive the optional wide layout. */
+@media screen and (min-width: 760px) {
+  .lc-header { overflow: hidden; }
+  .lc-sidebar { float: left; width: 190px; }
+  .lc-main { margin-left: 226px; }
+}
+@media screen and (max-width: 400px) {
+  .lc-shell { padding-left: 12px; padding-right: 12px; }
+  .lc-panel-body, .lc-card { padding: 14px; }
+  h1 { font-size: 26px; }
+}
+@media print {
+  html, body, .lc-page, .lc-panel, .lc-card { background: white; color: black; }
+  a, .lc-muted, .lc-intro, .lc-panel-body, .lc-card p { color: black; }
+  .lc-sidebar, .lc-graphic, .lc-skip { display: none; }
+  .lc-main { margin: 0; }
+}

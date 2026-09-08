@@ -1,0 +1,131 @@
+/** NeonUX 3.0 semantic contract. Theme files assign visual values; accents.css owns brand. */
+:root {
+  --neon-canvas: #f7f8fa;
+  --neon-surface: #ffffff;
+  --neon-surface-muted: #f5f5f5;
+  --neon-glass: rgba(255, 255, 255, 0.88);
+  --neon-solid: #ffffff;
+  --neon-dynamic: linear-gradient(135deg, #f0f1f3, #f7f8fa);
+  --neon-text-primary: #212121;
+  --neon-text-secondary: #757575;
+  --neon-text-muted: #9e9e9e;
+  --neon-text-on-accent: #ffffff;
+  --neon-border-subtle: #eeeeee;
+  --neon-border-strong: #e0e0e0;
+  --neon-border-glass: rgba(0, 0, 0, 0.08);
+  --neon-focus-color: #e91e63;
+  --neon-accent: #e91e63;
+  --neon-accent-hover: #c2185b;
+  --neon-accent-soft: #fce4ec;
+  --neon-elevation-card: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --neon-elevation-overlay: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --neon-glass-filter: blur(18px) saturate(135%);
+
+  --neon-color-brand: var(--neon-accent);
+  --neon-color-brand-hover: var(--neon-accent-hover);
+  --neon-color-brand-soft: var(--neon-accent-soft);
+  --neon-color-brand-muted: color-mix(in srgb, var(--neon-accent) 28%, var(--neon-solid));
+  --neon-color-bg: var(--neon-canvas);
+  --neon-color-surface: var(--neon-solid);
+  --neon-color-surface-muted: var(--neon-surface-muted);
+  --neon-color-surface-elevated: var(--neon-solid);
+  --neon-color-border: var(--neon-border-subtle);
+  --neon-color-border-strong: var(--neon-border-strong);
+  --neon-color-divider: var(--neon-border-subtle);
+  --neon-color-fg: var(--neon-text-primary);
+  --neon-color-fg-muted: var(--neon-text-secondary);
+  --neon-color-fg-dim: var(--neon-text-muted);
+  --neon-color-fg-on-brand: var(--neon-text-on-accent);
+
+  --neon-color-success: #43a047;
+  --neon-color-success-soft: #e8f5e9;
+  --neon-color-warning: #fb8c00;
+  --neon-color-warning-soft: #fff3e0;
+  --neon-color-danger: #e53935;
+  --neon-color-danger-soft: #ffebee;
+  --neon-color-info: #1e88e5;
+  --neon-color-badge: #e53935;
+
+  --neon-header-height: 60px;
+  --neon-header-height-max: 64px;
+  --neon-sidebar-width: 240px;
+  --neon-sidebar-width-collapsed: 68px;
+  --neon-right-rail-width: 280px;
+  --neon-bottom-nav-height: 64px;
+  --neon-layout-max-width: 1800px;
+  --neon-gallery-card-min: 240px;
+  --neon-card-min-width: var(--neon-gallery-card-min);
+  --neon-gallery-gap: 16px;
+  --neon-promo-max-height: 120px;
+  --neon-featured-banner-height: min(15vh, 140px);
+
+  --neon-space-1: 4px;
+  --neon-space-2: 8px;
+  --neon-space-3: 12px;
+  --neon-space-4: 16px;
+  --neon-space-5: 20px;
+  --neon-space-6: 24px;
+  --neon-space-8: 32px;
+  --neon-space-10: 40px;
+  --neon-space-12: 48px;
+
+  --neon-radius-xs: 6px;
+  --neon-radius-sm: 8px;
+  --neon-radius-md: 10px;
+  --neon-radius-card: 12px;
+  --neon-radius-lg: 16px;
+  --neon-radius-xl: 20px;
+  --neon-radius-pill: 9999px;
+
+  --neon-shadow-sm: var(--neon-elevation-card);
+  --neon-shadow-md: 0 8px 28px rgba(0, 0, 0, 0.08);
+  --neon-shadow-lg: var(--neon-elevation-overlay);
+
+  --neon-font-sans: "Pretendard Variable", Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --neon-font-retro: Dotum, Gulim, "Malgun Gothic", sans-serif;
+  --neon-text-xs: 12px;
+  --neon-text-sm: 14px;
+  --neon-text-base: 16px;
+  --neon-text-md: 16px;
+  --neon-text-lg: 18px;
+  --neon-text-xl: 21px;
+  --neon-text-2xl: 25px;
+  --neon-text-3xl: 32px;
+  --neon-line-tight: 1.3;
+  --neon-line-base: 1.6;
+  --neon-weight-regular: 400;
+  --neon-weight-medium: 500;
+  --neon-weight-semibold: 600;
+  --neon-weight-bold: 700;
+
+  --neon-ring-focus: 0 0 0 3px color-mix(in srgb, var(--neon-focus-color) 48%, transparent);
+  --neon-control-h-sm: 40px;
+  --neon-control-h-md: 44px;
+  --neon-control-h-lg: 48px;
+  --neon-touch-target: 44px;
+  --neon-safe-top: env(safe-area-inset-top, 0px);
+  --neon-safe-right: env(safe-area-inset-right, 0px);
+  --neon-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --neon-safe-left: env(safe-area-inset-left, 0px);
+
+  --neon-motion-press: 120ms;
+  --neon-motion-control: 190ms;
+  --neon-motion-sheet: 280ms;
+  --neon-motion-enter-duration: 380ms;
+  --neon-motion-enter-distance: 18px;
+  --neon-motion-stagger: 40ms;
+  --neon-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --neon-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --brand-magenta: var(--neon-color-brand);
+  --header-h: var(--neon-header-height);
+}
+
+@media (min-width: 1024px) {
+  :root { --neon-header-height: 64px; }
+}
+
+@media (pointer: coarse), (hover: none) {
+  :root { --neon-touch-target: 48px; }
+  .neon-ux { font-size: max(16px, 1rem); line-height: 1.6; }
+}

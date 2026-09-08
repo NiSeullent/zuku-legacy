@@ -1,0 +1,13 @@
+node_modules/
+.next/
+packages/legacy-core/dist/
+packages/bridge/dist/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.log
+coverage/
+artifacts/
+*.tsbuildinfo

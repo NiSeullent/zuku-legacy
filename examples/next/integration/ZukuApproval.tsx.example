@@ -1,0 +1,17 @@
+'use client';
+
+// Host-owned template: copy into the existing ZUKU application's component tree.
+// Keep the host's current auth implementation; do not add a second login system.
+import { hydrateAuthStore, getAccessToken } from '@/lib/auth';
+import DeviceApproval from '../components/DeviceApproval';
+import { tokenApproval } from '../lib/device-approval';
+
+const approve = tokenApproval(async () => {
+  // Runs only after the user's explicit confirmation click.
+  await hydrateAuthStore();
+  return getAccessToken();
+});
+
+export default function ZukuApproval({ code }: { code: string }) {
+  return <DeviceApproval code={code} approve={approve} />;
+}

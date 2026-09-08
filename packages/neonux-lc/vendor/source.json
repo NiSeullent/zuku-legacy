@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/NiSeullent/neonux-core",
+  "commit": "fbb3840af0076c580680fe9d8b90cf50a639ddc7",
+  "theme": "slate",
+  "mode": "dark",
+  "files": {
+    "tokens.css": "src/tokens/index.css",
+    "slate.css": "src/styles/themes/slate.css",
+    "LICENSE": "LICENSE"
+  }
+}

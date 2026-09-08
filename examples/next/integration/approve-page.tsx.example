@@ -1,0 +1,13 @@
+// Replace app/legacy/approve/page.tsx in the existing modern host after copying
+// ZukuApproval and adjusting the import to its final host-owned location.
+import ZukuApproval from '../../../components/ZukuApproval';
+
+export const dynamic = 'force-dynamic';
+export const metadata = { title: 'Legacy 기기 연결 | ZUKU', robots: { index: false, follow: false } };
+
+export default async function ApprovalPage({ searchParams }: {
+  searchParams: Promise<{ code?: string | string[] }>;
+}) {
+  const params = await searchParams;
+  return <ZukuApproval code={typeof params.code === 'string' ? params.code : ''} />;
+}

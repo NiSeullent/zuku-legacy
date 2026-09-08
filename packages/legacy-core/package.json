@@ -1,0 +1,35 @@
+{
+  "name": "@zuku/legacy-core",
+  "version": "0.1.0",
+  "description": "Server-rendered ZUKU client for classic browsers; shared API, no client hydration",
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./api": {
+      "types": "./dist/api.d.ts",
+      "default": "./dist/api.js"
+    },
+    "./routing": {
+      "types": "./dist/routing.d.ts",
+      "default": "./dist/routing.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@zuku/legacy-bridge": "0.1.0",
+    "@zuku/neonux-lc": "0.1.0"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@zuku/legacy-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Loopback-only TLS companion and authenticated transport proof for ZUKU Legacy",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./routing": { "types": "./dist/routing.d.ts", "default": "./dist/routing.js" }
+  },
+  "bin": { "zuku-legacy-bridge": "./dist/cli.js" },
+  "files": ["dist", "README.md"],
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit" },
+  "engines": { "node": ">=22" }
+}

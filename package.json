@@ -1,0 +1,27 @@
+{
+  "name": "zuku-legacy-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "npm run build --workspace @zuku/legacy-bridge && npm run build --workspace @zuku/neonux-lc && npm run build --workspace @zuku/legacy-core",
+    "start": "node apps/server/server.mjs",
+    "dev": "npm run build && npm start",
+    "bridge": "node packages/bridge/dist/cli.js",
+    "test": "npm run build && node --import tsx --test tests/*.test.*",
+    "check": "npm test && node scripts/check-budgets.mjs",
+    "test:browser": "node scripts/browser-qa.mjs",
+    "test:live": "node scripts/live-contracts.mjs"
+  },
+  "engines": {"node": ">=22.13.0"},
+  "devDependencies": {
+    "@types/node": "^22.20.0",
+    "typescript": "5.9.3",
+    "tsx": "^4.21.0",
+    "acorn": "^8.18.0",
+    "jsdom": "^26.1.0",
+    "@playwright/test": "^1.58.0"
+  }
+}

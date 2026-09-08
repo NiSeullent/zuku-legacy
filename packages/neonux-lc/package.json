@@ -1,0 +1,27 @@
+{
+  "name": "@zuku/neonux-lc",
+  "version": "0.1.0",
+  "description": "Bounded ES3 and CSS2 presentation adapter for the NeonUX semantic contract",
+  "license": "Apache-2.0",
+  "private": true,
+  "exports": {
+    "./style.css": "./dist/neonux-lc.css",
+    "./runtime.js": "./dist/neonux-lc.js",
+    "./server-assets": {
+      "types": "./dist/server-assets.d.ts",
+      "default": "./dist/server-assets.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "NOTICE",
+    "vendor/LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check",
+    "sync": "node scripts/sync-tokens.mjs"
+  },
+  "type": "module"
+}

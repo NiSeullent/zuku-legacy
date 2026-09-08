@@ -1,0 +1,7 @@
+ZUKU Web Client (Legacy) and NeonUX-LC
+Copyright 2026 NiSeullent
+
+NeonUX-LC includes and derives CSS tokens from NiSeullent/neonux-core,
+licensed under Apache-2.0. See packages/neonux-lc/NOTICE and vendor/source.json.
+All API implementation and server infrastructure belong to the existing ZUKU
+platform; this repository contains a client adapter, not a copy of that backend.
