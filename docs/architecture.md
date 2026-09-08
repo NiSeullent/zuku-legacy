@@ -37,6 +37,8 @@ query와 원래 공개 경로를 보존하고 화면의 링크·페이지 이동
 
 독립 서버는 모던 앱을 포함하지 않는다. 확인된 구형 UA의 공개 경로는 직접 처리하고, 모던·알 수 없는 UA의 공개 GET/HEAD는 같은 경로의 `ZUKU_MODERN_ORIGIN`으로 302 이동한다. Next 통합은 이 이동 없이 같은 호스트의 기존 모던 렌더러를 유지한다. 이 두 동작을 혼동하지 않는다.
 
+전용 Classic 호스트는 `ZUKU_FORCE_CLASSIC=1`로 이 handoff를 끈다. `ie.zuzunza.com`의 모든 제품은 별도 호스트가 아니라 `/hype`, `/swipe`, `/vine`, `/vive`의 canonical path로 표현한다. 이 정책은 신뢰된 서버 설정이며 요청 헤더로 켤 수 없다.
+
 ## 패키지 경계
 
 | 위치 | 책임 | 두지 않는 기능 |

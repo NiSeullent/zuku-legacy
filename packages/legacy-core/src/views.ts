@@ -27,7 +27,7 @@ export function document(ctx: ViewContext, title: string, body: string): string 
   const status = ctx.bridge ? '보안 브리지 연결' : ctx.secure ? 'HTTPS 연결' : 'HTTP · 공개 열람';
   const nav = PRODUCTS.map(p => `<li>${link(ctx, p.id ? '/' + p.id : '', p.name, (ctx.path === '/' + p.id || !p.id && ctx.path === '') ? 'lc-active' : '')}</li>`).join('');
   return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>${text(title)} | ZUKU Legacy</title><link rel="stylesheet" type="text/css" href="${e(ctx.base)}/assets/neonux-lc.css?v=${CLASSIC_ASSET_REVISION}"></head>
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>${text(title)} | ZUKU Legacy</title><link rel="stylesheet" type="text/css" href="${e(ctx.base)}/assets/neonux-lc.css?v=${CLASSIC_ASSET_REVISION}"></head>
 <body class="lc-page" data-lc-mode="${ctx.mode}"><a class="lc-skip" href="#main">본문 바로가기</a><div class="lc-shell">
 <div class="lc-header"><a class="lc-brand" href="${e(href(ctx))}"><span class="lc-brand-mark">Z</span> ZUKU <span class="lc-badge">LEGACY</span></a><p class="lc-muted">작은 기기에서도, 같은 세계로.</p><p class="lc-header-actions">${ctx.session?.user ? `${text(ctx.session.user.display_name || ctx.session.user.username)} 님 · ${link(ctx, '/account', '내 계정')}` : link(ctx, '/connect', '계정 연결', 'lc-button')}${link(ctx, '/settings', '화면 설정', 'lc-button')}</p></div>
 <div class="lc-layout"><div class="lc-sidebar"><p class="lc-eyebrow">YOUR ZUKU</p><ul class="lc-nav">${nav}<li>${link(ctx, '/bookmarks', '보관함')}</li><li>${link(ctx, '/messages', '메시지')}</li></ul><div class="lc-panel"><div class="lc-panel-body" data-lc-surface="status"><p class="lc-badge">${status}</p><p class="lc-muted">${ctx.mode === 'text' ? '텍스트 모드 · 이미지와 효과 없음' : '가벼운 화면 · 자동 재생 없음'}</p>${link(ctx, '/compatibility', '지원 기능 보기')}</div></div></div>
@@ -77,7 +77,7 @@ export function capabilityPage(ctx: ViewContext): string {
     ['영상 · 음악 · 게임', '소개와 대화 이용 가능. 재생은 코덱·엔진 지원에 따름'],
     ['메시지', '기존 종단간 암호화 필요. 모던 화면에서 이용'],
     ['패스키 · 결제 · Studio · 업로드 · 관리', '모던 ZUKU에서 이용'],
-    ['IE6 실기기 검증', '아직 수행하지 않음. ES3 파싱·호환 API 테스트와 구분']
+    ['Internet Explorer 6–11', '같은 Classic 화면. IE6 실기기 검증 완료, IE7–11 자동 분기·ES3·CSS2 계약 검사 완료']
   ];
   return intro('작은 브라우저의 사용 설명서', '같은 ZUKU 계정과 콘텐츠. 기기에 맞는 표현 방식.') + panel('현재 지원 범위', `<table class="lc-table" summary="기능별 지원 범위"><thead><tr><th>기능</th><th>지원 방식</th></tr></thead><tbody>${rows.map(r=>`<tr><th>${text(r[0])}</th><td>${text(r[1])}</td></tr>`).join('')}</tbody></table>`) + panel('보호된 연결', '<p>공개 HTTP에서는 공개 콘텐츠만 읽을 수 있습니다. 계정 연결과 쓰기에는 HTTPS 또는 같은 기기의 루프백 보안 브리지가 필요합니다.</p><p>보안 브리지가 인증서를 검증하는 TLS 연결을 담당합니다. HTTP로 받은 자바스크립트 암호화는 통신 중 코드 변조를 막을 수 없어 TLS 대체제로 사용하지 않습니다.</p><p>최신 Node.js 브리지는 Windows XP에서 실행되지 않습니다. XP 기기는 별도로 검증한 호환 브리지 또는 운영체제 수준의 보호된 터널이 필요합니다. 일반 LAN의 HTTP 연결은 보호된 연결이 아닙니다.</p>') + panel('연결된 플랫폼', ['messages','settings','studio','wallet'].map(path=>`<p><a href="${e(ctx.modernOrigin + '/' + path)}">${text(path)} — 모던 화면</a></p>`).join(''));
 }

@@ -26,6 +26,8 @@ export interface RequestContext {
   secureTransport?: boolean;
   /** Adapter-derived address; never take X-Forwarded-For from an untrusted client. */
   clientAddress?: string;
+  /** Trusted adapter policy for a dedicated Classic hostname such as ie.zuzunza.com. */
+  forceClassicView?: boolean;
 }
 const MAX_FORM = 16 * 1024;
 class HttpError extends Error { constructor(public status: number, message: string) { super(message); } }
@@ -96,6 +98,7 @@ export function createLegacyApp(options: LegacyOptions) {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store, private',
       'X-Content-Type-Options': 'nosniff',
+      'X-UA-Compatible': 'IE=edge',
       'X-Frame-Options': 'DENY',
       'Referrer-Policy': 'no-referrer',
       'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
@@ -134,7 +137,7 @@ export function createLegacyApp(options: LegacyOptions) {
         ctx.bridge = true;
       }
       ctx.secure = ctx.bridge || context.secureTransport === true;
-      if (ctx.publicRouting && !ctx.bridge && !isClassicUserAgent(request.headers.get('user-agent'))) return new Response('Modern renderer should handle this request',{status:404,headers:{'Vary':'User-Agent'}});
+      if (ctx.publicRouting && !ctx.bridge && !context.forceClassicView && !isClassicUserAgent(request.headers.get('user-agent'))) return new Response('Modern renderer should handle this request',{status:404,headers:{'Vary':'User-Agent'}});
       // Proof authenticates a configured companion; URL scheme and proxy headers alone never do.
       if (ctx.secure) {
         const id = sessionCookie(request);

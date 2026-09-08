@@ -13,7 +13,7 @@ function equal(a, b) {
   return left.length === right.length && timingSafeEqual(left, right);
 }
 /** The adapter, not the request URL, decides whether the accepted transport is HTTPS. */
-export function createStandaloneServer({app, publicOrigin, tls, ingressKey, modernOrigin='https://www.zuzunza.com'}) {
+export function createStandaloneServer({app, publicOrigin, tls, ingressKey, modernOrigin='https://www.zuzunza.com', forceClassic=false}) {
   const origin = new URL(publicOrigin);
   let active = 0;
   async function serve(req, res) {
@@ -22,7 +22,7 @@ export function createStandaloneServer({app, publicOrigin, tls, ingressKey, mode
     if (!req.url?.startsWith('/') || req.url.startsWith('//') || /[\\\x00-\x20]/.test(req.url)) return reject(400,'Invalid request target');
     if (req.url === '/healthz' && req.method === 'GET') { res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'}); res.end('{"status":"ok","service":"zuku-legacy"}'); return; }
     const parsed = new URL(req.url,origin);
-    if (publicToLegacyPath(parsed.pathname) !== null && !isClassicUserAgent(req.headers['user-agent']) && !req.headers['x-zuku-bridge-signature'] && ['GET','HEAD'].includes(req.method)) {
+    if (!forceClassic && publicToLegacyPath(parsed.pathname) !== null && !isClassicUserAgent(req.headers['user-agent']) && !req.headers['x-zuku-bridge-signature'] && ['GET','HEAD'].includes(req.method)) {
       const destination = new URL(parsed.pathname+parsed.search,modernOrigin);
       if (destination.origin === origin.origin) return reject(503,'Mount the modern renderer on this origin before enabling standalone handoff');
       res.writeHead(302,{'Location':destination.href,'Content-Length':'0','Vary':'User-Agent','Cache-Control':'no-store'});res.end();return;
@@ -44,6 +44,7 @@ export function createStandaloneServer({app, publicOrigin, tls, ingressKey, mode
     const response = await app.handle(request,{
       secureTransport: req.socket.encrypted === true || (origin.protocol === 'https:' && equal(req.headers['x-zuku-ingress-key'],ingressKey)),
       clientAddress: req.socket.remoteAddress,
+      forceClassicView: forceClassic,
     });
     const responseBody = req.method === 'HEAD' ? null : Buffer.from(await response.arrayBuffer());
     const outgoing = Object.fromEntries(response.headers);
@@ -74,11 +75,12 @@ export async function main() {
   const certPath=process.env.ZUKU_TLS_CERT, keyPath=process.env.ZUKU_TLS_KEY;
   if (!!certPath !== !!keyPath) throw new Error('Set both ZUKU_TLS_CERT and ZUKU_TLS_KEY');
   const publicOrigin=process.env.ZUKU_PUBLIC_ORIGIN || `${certPath ? 'https' : 'http'}://127.0.0.1:${port}`;
+  const forceClassic=process.env.ZUKU_FORCE_CLASSIC === '1';
   const app=createLegacyApp({apiOrigin:process.env.ZUKU_API_ORIGIN || 'http://127.0.0.1:30012',publicOrigin,modernOrigin:process.env.ZUKU_MODERN_ORIGIN,bridgeKey:process.env.ZUKU_BRIDGE_KEY});
   const tls=certPath && keyPath ? {cert:await readFile(certPath),key:await readFile(keyPath)} : undefined;
-  const server=createStandaloneServer({app,publicOrigin,tls,ingressKey:process.env.ZUKU_HTTPS_PROXY_SECRET,modernOrigin:process.env.ZUKU_MODERN_ORIGIN});
+  const server=createStandaloneServer({app,publicOrigin,tls,ingressKey:process.env.ZUKU_HTTPS_PROXY_SECRET,modernOrigin:process.env.ZUKU_MODERN_ORIGIN,forceClassic});
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,resolve);});
-  console.log(`ZUKU Legacy: ${publicOrigin}/ (classic browsers selected automatically)`);
+  console.log(`ZUKU Legacy: ${publicOrigin}/ (${forceClassic ? 'dedicated classic host' : 'classic browsers selected automatically'})`);
   return server;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main().catch(error=>{console.error(error.message);process.exitCode=1;});

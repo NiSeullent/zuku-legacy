@@ -17,3 +17,22 @@ test('standalone adapter derives trust from socket/authenticated ingress and rej
     response=await fetch(origin+'/legacy',{method:'POST',body:'x'.repeat(17000)});assert.equal(response.status,413);assert.equal(calls.length,1);
   } finally {await new Promise(r=>server.close(r));}
 });
+
+test('dedicated classic host keeps modern user agents and products on canonical paths',async()=>{
+  const calls=[];const origin='http://127.0.0.1:18790';
+  const server=createStandaloneServer({publicOrigin:origin,forceClassic:true,app:{handle:async(req,ctx)=>{
+    calls.push({url:req.url,ctx});return new Response('<a href="/hype">Hype</a><a href="/swipe">Swipe</a><a href="/vine">Vine</a><a href="/vive">Vive</a>',{headers:{'content-type':'text/html'}});
+  }}});
+  await new Promise(r=>server.listen(18790,'127.0.0.1',r));
+  try {
+    for (const path of ['/','/hype','/swipe','/vine','/vive']) {
+      const response=await fetch(origin+path,{redirect:'manual',headers:{'user-agent':'Mozilla/5.0 Chrome/140.0.0.0'}});
+      assert.equal(response.status,200,path);assert.equal(response.headers.get('location'),null,path);
+      const html=await response.text();
+      for (const product of ['hype','swipe','vine','vive']) assert.ok(html.includes(`href="/${product}"`));
+    }
+    assert.equal(calls.length,5);
+    assert.ok(calls.every(call=>call.ctx.forceClassicView===true));
+    assert.deepEqual(calls.map(call=>new URL(call.url).pathname),['/','/hype','/swipe','/vine','/vive']);
+  } finally {await new Promise(r=>server.close(r));}
+});

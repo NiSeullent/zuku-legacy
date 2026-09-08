@@ -6,10 +6,11 @@ text are the application. The runtime adds small, optional graphics without
 replacing content or adding a client-side state, router, authentication stack,
 API client, or duplicate business logic.
 
-This is an **IE6-targeted initial implementation**, not a claim that an automated
-modern-browser test proves IE6 compatibility. Actual IE6/7/8 virtual-machine
-verification, including VML behavior, fonts, input controls and screen readers,
-is a release gate. VML is optional and may be disabled by browser policy. The
+This is an **IE6–11-targeted initial implementation**, not a claim that an
+automated modern-browser test proves those Microsoft engines compatible. Actual
+IE6 evidence is recorded separately; IE7–11 native-engine verification,
+including VML behavior, fonts, input controls and screen readers, is a release
+gate. VML is optional and may be disabled by browser policy. The
 plain document remains usable when scripts, VML, canvas or styling are absent.
 
 ## Consume

@@ -4,7 +4,7 @@
 
 | 검사 | 결과 |
 | --- | --- |
-| `npm run check` | 66개 통과: TypeScript, API 계약, 요청·세션·CSRF·브리지 보안, 자동 경로 선택, ES3와 자원 예산 |
+| `npm run check` | 68개 통과: TypeScript, API 계약, 요청·세션·CSRF·브리지 보안, IE6–11 자동 선택, 전용 Classic 호스트 경로, ES3와 자원 예산 |
 | `npm run test:browser` | Chromium 320/390/1024/1440px × JavaScript on/off, 8개 조합 통과 |
 | `npm run test:layout` | 미디어 query를 제거한 Chromium에서 320/480/1024px × 16/24/32px 기본 글자 크기, 긴 본문·표·입력과 메뉴 검사 9개 통과 |
 | Next 예제 | Next 16.3.4 기본 Turbopack 빌드·타입 검사·테스트 11개 통과 |

@@ -22,6 +22,8 @@ NeonUX-LC는 렌더링만 담당한다. 암호 알고리즘, 키 교환, 로그�
 
 독립 서버와 Next 예제는 공개 origin에 `ZUKU_PUBLIC_ORIGIN`, HTTPS ingress 인증에 `ZUKU_HTTPS_PROXY_SECRET`을 공통으로 사용한다. ingress는 외부의 `X-Zuku-Ingress-Key`를 제거하고 설정된 값을 덮어써야 한다. 브리지 요청 증명의 `ZUKU_BRIDGE_KEY`와는 역할이 다르며 어느 키도 클라이언트 코드나 `NEXT_PUBLIC_*` 변수에 넣지 않는다.
 
+`http://ie.zuzunza.com`은 TLS를 협상하지 못하는 IE용 공개 열람 origin으로 둘 수 있다. `ZUKU_FORCE_CLASSIC=1`은 화면 선택과 경로만 고정하며 연결을 안전한 것으로 승격하지 않는다. 이 호스트의 로그인·쓰기·세션 발급은 계속 차단된다.
+
 ## 로컬 브리지
 
 [`@zuku/legacy-bridge`](../packages/bridge/README.md)는 Node.js 22+ 프로세스다. 브라우저는 정확한 `http://127.0.0.1:<port>/` 주소와 기존 공개 경로로 접속하고, 브리지는 설정한 단일 HTTPS origin으로만 전달한다. 전송을 위한 로컬 origin이며 사용자가 별도 Legacy 경로를 선택하는 방식은 아니다.

@@ -1,6 +1,6 @@
 # 호환성과 검증 범위
 
-목표는 IE6급 브라우저와 저사양 기기에서도 **기존과 같은 ZUKU URL**로 공개 콘텐츠와 보호된 계정 기능을 이용하는 것이다. 확인된 구형 User-Agent에는 클래식 렌더러를 자동 선택하고 나머지 브라우저는 기존 모던 처리에 맡긴다. 별도 `/legacy` 진입을 요구하지 않는다.
+목표는 IE6–11과 저사양 기기에서도 **기존과 같은 ZUKU URL**로 공개 콘텐츠와 보호된 계정 기능을 이용하는 것이다. Internet Explorer는 클래식 렌더러를 자동 선택하고 나머지 브라우저는 기존 모던 처리에 맡긴다. 전용 `ie.zuzunza.com`에서는 브라우저와 관계없이 Classic 화면을 제공한다. 별도 `/legacy` 진입을 요구하지 않는다.
 
 **현재 릴리스는 초기 구현이다. Server 2003 SP2의 실제 IE6에서 아래 범위를 검증했으며, 모든 IE6 환경의 호환 인증을 뜻하지 않는다.** 브라우저 렌더링 호환성, 네트워크 보안, 미디어 재생은 각각 확인해야 한다.
 
@@ -10,7 +10,9 @@
 | --- | --- | --- | --- |
 | IE6 / Server 2003 SP2 | HTML 문서·링크·양식, 선택적 VML | 실제 IE 6.0.3790.3959에서 너비 320/480/800/1024px, Largest 320px, 한글 GET 검색, VML 표면·도형 관찰. [원본 결과](ie6-vm.md) | 보호된 로그인·쓰기·쿠키, 별도 서비스 팩, 실제 저사양 하드웨어 |
 | IE6 / Windows XP | HTML 문서·링크·양식, 선택적 VML | 배포 JS의 ES3 파싱, 클래식 API stub 테스트 | 실제 VM에서 레이아웃·VML·입력·문자 인코딩·쿠키 확인. XP용 브리지 별도 필요 |
-| IE7·IE8 | 같은 문서 구조, 가능한 경우 VML | 동일한 ES3 및 fallback 테스트 | 해당 브라우저 엔진에서 실측 |
+| IE7·IE8 | 같은 문서 구조, 가능한 경우 VML | UA 자동 분기, ES3와 VML fallback 계약 검사 | 해당 브라우저 엔진에서 실측 |
+| IE9 | 같은 Classic 문서, canvas → VML → DOM | UA 자동 분기, ES3와 세 렌더러 계약 검사 | 실제 IE9 엔진에서 실측 |
+| IE10·IE11 | 같은 Classic 문서 | MSIE와 Trident UA 자동 분기 검사 | 실제 IE10·IE11 엔진에서 실측 |
 | canvas를 지원하는 현대 브라우저 | 같은 문서에 소형 canvas 장식 | canvas 선택·실패 fallback·자원 한도 자동 테스트 | OS·브라우저별 시각 및 입력 회귀 검사 |
 | canvas·VML을 사용할 수 없는 브라우저 | DOM 문서만으로 읽기·입력 | 렌더러 없음과 초기화 실패에 대한 자동 테스트 | 개별 임베디드 엔진에서 확인 |
 | JavaScript 비활성 / 텍스트 모드 | 서버 HTML과 기본 양식 사용 | 실제 IE6의 Active scripting을 Disable로 바꾸고 320px에서 0개 스크립트, 탐색·한글 GET 검색·모드 유지·가로 넘침 없음 확인 | 실제 보조공학 도구 확인 |
@@ -20,7 +22,7 @@
 
 ES3 파서는 문법만 검사한다. jsdom·VML stub은 Microsoft의 실제 layout/VML 엔진을 실행하지 않는다. 현대 Chromium에서 통과한 화면 검사 역시 IE6 실행 결과로 표시하지 않는다. 테스트 기록에는 브라우저 전체 버전, OS, 문서 모드, 보안 설정, 메모리, 화면 크기와 사용한 전송 방식을 남긴다.
 
-UA 자동 선택 테스트와 실제 엔진 검증도 다르다. 최신 Chromium의 UA를 IE6으로 바꾸면 라우팅과 클래식 HTML 응답을 검사할 수 있지만 IE6의 렌더링·보안 동작을 실행하는 것은 아니다. UA가 없는 요청, 알 수 없는 브라우저, 최신 Chrome·Safari·Firefox·Edge가 자동으로 클래식 처리되지 않는지도 함께 검사한다. 실제 저사양 여부를 UA만으로 측정할 수는 없으며 텍스트 모드가 CPU·RAM 계측을 대신하지 않는다.
+UA 자동 선택 테스트와 실제 엔진 검증도 다르다. 최신 Chromium의 UA를 IE로 바꾸면 라우팅과 클래식 HTML 응답을 검사할 수 있지만 Microsoft의 렌더링·보안 동작을 실행하는 것은 아니다. UA가 없는 요청, 알 수 없는 브라우저, 최신 Chrome·Safari·Firefox·Edge가 자동으로 클래식 처리되지 않는지도 함께 검사한다. 전용 Classic 호스트의 강제 선택은 서버 설정이며 요청 헤더로 켤 수 없다. 실제 저사양 여부를 UA만으로 측정할 수는 없으며 텍스트 모드가 CPU·RAM 계측을 대신하지 않는다.
 
 ## NeonUX-LC의 표현 단계
 
@@ -33,7 +35,7 @@ UA 자동 선택 테스트와 실제 엔진 검증도 다르다. 최신 Chromium
 
 VML에는 namespace와 내장 behavior가 필요하며 설치 상태에 따라 사용할 수 없을 수 있다. VML은 IE9부터 deprecated된 역사적 기술이므로 선택적 fallback에만 사용한다. [Microsoft VML Appendix](https://learn.microsoft.com/en-us/windows/win32/vml/web-workshop---how-to-use-vml-on-web-pages----appendix).
 
-NeonUX-LC는 외부 `.htc`, ActiveX 설치, Flash 또는 Silverlight를 내려받지 않는다. canvas·VML 장식은 읽을 내용이나 조작 버튼을 포함하지 않는다. 따라서 그래픽이 없어져도 상태를 설명하는 원래 텍스트가 남는다.
+NeonUX-LC는 외부 `.htc`, ActiveX 설치, Flash 또는 Silverlight를 내려받지 않는다. canvas·VML 장식은 읽을 내용이나 조작 버튼을 포함하지 않는다. 따라서 그래픽이 없어져도 상태를 설명하는 원래 텍스트가 남는다. IE8 이상에는 응답 헤더와 문서 앞부분의 `X-UA-Compatible: IE=edge`를 보내 가능한 가장 높은 표준 문서 모드를 사용하게 한다.
 
 ## 저사양 제한
 

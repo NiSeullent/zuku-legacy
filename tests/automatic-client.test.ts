@@ -66,8 +66,10 @@ test('IE6 opens the ordinary homepage with canonical navigation and internal enh
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('location'), null);
   assert.equal(response.headers.get('vary'), 'User-Agent');
+  assert.equal(response.headers.get('x-ua-compatible'), 'IE=edge');
   const html = await response.text();
   assert.ok(html.includes('ZUKU Legacy'));
+  assert.match(html, /<meta http-equiv="X-UA-Compatible" content="IE=edge">/);
   assert.ok(html.includes('href="/content/cnt_one"'));
   assert.ok(html.includes('href="/community"'));
   assert.ok(html.includes('href="/login"'));
@@ -129,6 +131,21 @@ test('modern and unknown browsers remain the host renderer responsibility withou
     }
   }
   assert.equal(app.calls.length, 0);
+});
+
+test('a trusted dedicated-host adapter can render canonical product paths for every browser', async () => {
+  const app = appFixture();
+  for (const path of ['/', '/hype', '/swipe', '/vine', '/vive']) {
+    const response = await app.handle(req(path, {}, MODERN_UA), { forceClassicView: true });
+    assert.equal(response.status, 200, path);
+    assert.equal(response.headers.get('location'), null, path);
+    const html = await response.text();
+    for (const product of ['hype', 'swipe', 'vine', 'vive']) {
+      assert.ok(anchors(html).includes('/' + product), `${path} -> /${product}`);
+      assert.ok(!anchors(html).includes(`https://${product}.zuzunza.com`));
+    }
+    noInternalNavigation(html);
+  }
 });
 
 test('matching host rewrites select canonical rendering without granting secure transport', async () => {
