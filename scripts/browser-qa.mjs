@@ -36,6 +36,6 @@ try {
     report.push({browser:'Chromium',routingUserAgent:'IE6 (routing only; not IE6 engine)',javascript:js,width,status:'passed',nodes:dimensions.nodes});
     await context.close();
   }
-  await writeFile(new URL('../artifacts/browser-qa.json',import.meta.url),JSON.stringify({source:'deterministic test fixtures; canonical URLs with automatic classic routing',ie6VM:'not tested',report},null,2));
+  await writeFile(new URL('../artifacts/browser-qa.json',import.meta.url),JSON.stringify({source:'deterministic test fixtures; canonical URLs with automatic classic routing',runtime:process.version,ie6VM:'Not exercised by this Chromium runner; see docs/ie6-vm.md for separate native IE6 evidence.',report},null,2));
   console.log(JSON.stringify(report,null,2));
 } finally {await browser.close();await new Promise(r=>server.close(r));}

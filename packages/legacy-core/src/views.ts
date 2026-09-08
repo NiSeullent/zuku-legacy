@@ -1,5 +1,6 @@
 import { escape as e, text, paragraph, plain, safeHttpUrl } from './html.js';
 import { legacyToPublicPath } from './routing.js';
+import { CLASSIC_ASSET_REVISION } from './assets.js';
 import type { Session } from './state.js';
 
 export const PRODUCTS = [
@@ -26,12 +27,12 @@ export function document(ctx: ViewContext, title: string, body: string): string 
   const status = ctx.bridge ? '보안 브리지 연결' : ctx.secure ? 'HTTPS 연결' : 'HTTP · 공개 열람';
   const nav = PRODUCTS.map(p => `<li>${link(ctx, p.id ? '/' + p.id : '', p.name, (ctx.path === '/' + p.id || !p.id && ctx.path === '') ? 'lc-active' : '')}</li>`).join('');
   return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>${text(title)} | ZUKU Legacy</title><link rel="stylesheet" type="text/css" href="${e(ctx.base)}/assets/neonux-lc.css"></head>
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>${text(title)} | ZUKU Legacy</title><link rel="stylesheet" type="text/css" href="${e(ctx.base)}/assets/neonux-lc.css?v=${CLASSIC_ASSET_REVISION}"></head>
 <body class="lc-page" data-lc-mode="${ctx.mode}"><a class="lc-skip" href="#main">본문 바로가기</a><div class="lc-shell">
 <div class="lc-header"><a class="lc-brand" href="${e(href(ctx))}"><span class="lc-brand-mark">Z</span> ZUKU <span class="lc-badge">LEGACY</span></a><p class="lc-muted">작은 기기에서도, 같은 세계로.</p><p class="lc-header-actions">${ctx.session?.user ? `${text(ctx.session.user.display_name || ctx.session.user.username)} 님 · ${link(ctx, '/account', '내 계정')}` : link(ctx, '/connect', '계정 연결', 'lc-button')}${link(ctx, '/settings', '화면 설정', 'lc-button')}</p></div>
 <div class="lc-layout"><div class="lc-sidebar"><p class="lc-eyebrow">YOUR ZUKU</p><ul class="lc-nav">${nav}<li>${link(ctx, '/bookmarks', '보관함')}</li><li>${link(ctx, '/messages', '메시지')}</li></ul><div class="lc-panel"><div class="lc-panel-body" data-lc-surface="status"><p class="lc-badge">${status}</p><p class="lc-muted">${ctx.mode === 'text' ? '텍스트 모드 · 이미지와 효과 없음' : '가벼운 화면 · 자동 재생 없음'}</p>${link(ctx, '/compatibility', '지원 기능 보기')}</div></div></div>
 <div class="lc-main" id="main"><form class="lc-search" action="${e(ctx.publicRouting ? legacyToPublicPath('/search') : ctx.base+'/search')}" method="get"><label class="lc-label" for="q">ZUKU 검색</label><input class="lc-input" id="q" name="q" type="text" maxlength="120" value=""><input type="hidden" name="mode" value="${ctx.mode}"><button class="lc-button lc-button-primary" type="submit">검색</button></form>${body}</div></div>
-<div class="lc-footer"><p>ZUKU Web Client (Legacy) · NeonUX-LC 0.1</p><p>${link(ctx, '/compatibility', '호환성')} · <a href="${e(ctx.modernOrigin)}">모던 ZUKU</a> · <a href="https://github.com/NiSeullent/zuku-legacy">소스 코드</a></p></div></div>${ctx.mode === 'text' ? '' : `<script type="text/javascript" src="${e(ctx.base)}/assets/neonux-lc.js"></script>`}</body></html>`;
+<div class="lc-footer"><p>ZUKU Web Client (Legacy) · NeonUX-LC 0.1</p><p>${link(ctx, '/compatibility', '호환성')} · <a href="${e(ctx.modernOrigin)}">모던 ZUKU</a> · <a href="https://github.com/NiSeullent/zuku-legacy">소스 코드</a></p></div></div>${ctx.mode === 'text' ? '' : `<script type="text/javascript" src="${e(ctx.base)}/assets/neonux-lc.js?v=${CLASSIC_ASSET_REVISION}"></script>`}</body></html>`;
 }
 export function intro(title: string, summary: string): string { return `<div class="lc-hero"><p class="lc-eyebrow">ZUKU / CLASSIC WEB</p><h1>${text(title)}</h1><p>${text(summary)}</p></div>`; }
 export function contentCard(ctx: ViewContext, value: unknown): string {

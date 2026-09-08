@@ -186,7 +186,7 @@ test('compiled CSS uses literal shared tokens and a block baseline', () => {
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
   assert.doesNotMatch(withoutComments, /var\(|--neon-|\{\{|display:\s*(?:flex|grid)|@import|expression\(|@font-face/);
   assert.match(withoutComments, /\.lc-shell\s*\{[^}]*max-width:/);
-  assert.doesNotMatch(withoutComments.split('@media')[0], /(?:min-width|float):/);
+  assert.doesNotMatch(withoutComments.split('@media')[0], /min-width:/);
   assert.ok(Buffer.byteLength(css) < 12_288, 'Uncompressed CSS exceeds 12 KiB budget');
   const map = JSON.parse(readFileSync(new URL('../packages/neonux-lc/dist/token-map.json', import.meta.url), 'utf8'));
   assert.equal(map.tokens['neon-canvas'], '#0f1115');

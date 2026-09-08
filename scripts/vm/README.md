@@ -48,8 +48,11 @@ Copy `ie6-probe.vbs` into a local directory inside the Windows XP / Server 2003
 guest and run it from a command prompt:
 
 ```bat
-cscript //nologo C:\qa\ie6-probe.vbs C:\qa\ie6-report.txt
+cscript //nologo C:\qa\ie6-probe.vbs C:\qa\ie6-report.txt 1024 auto
+cscript //nologo C:\qa\ie6-probe.vbs C:\qa\ie6-report.txt 320 text
 ```
+
+The optional third argument is the outer IE window width (320–1280, default 1024); the fourth is `auto` or `text`. The document viewport is narrower than the outer window and is measured separately. Set IE View → Text Size and the fixture zone's Active scripting policy explicitly before a run; `text` omits scripts but does not change browser security settings.
 
 The ASCII source constructs Korean text with `ChrW`. It launches a visible
 `InternetExplorer.Application` COM instance and navigates only the fixed fixture
@@ -62,9 +65,16 @@ and popups are canceled. No OS security settings or credentials are changed.
 The report records executable / MSHTML versions, user agent, title, heading,
 script list, canonical links and horizontal layout measurements. Page runtime
 inspection reports JScript and NeonUX-LC versions when accessible; blocked
-inspection is explicitly marked unverified. Text mode is inspected without
+inspection is explicitly marked unverified. A missing initialized graphics
+surface is reported as unobserved; namespace presence alone does not prove VML
+or initialization worked. VML observations require surface and primitive nodes.
+Text mode is inspected without
 injecting script. Each navigation polls at 100 ms intervals for at most 30
 seconds; COM failures and assertion failures produce a nonzero exit status.
+If IE denies COM access to `navigator.userAgent`, that optional diagnostic is
+reported as unobserved with a warning. No substitute UA is generated: compare
+the recorded executable / MSHTML versions with the fixture server's real
+request log. Document, heading and form checks remain mandatory.
 
 The named report is overwritten as UTF-16LE with a BOM and also printed through
 `cscript`. Omit the report argument to use `ie6-report.txt` beside the script.

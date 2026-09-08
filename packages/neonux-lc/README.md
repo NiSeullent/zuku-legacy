@@ -54,11 +54,20 @@ that status text.
 | `lc-list`, `lc-data`, `lc-footer`, `lc-skip` | Lists, data tables, footer, visible skip link |
 
 Use real `a`, `button`, `label`, `input` and heading elements. The CSS baseline
-uses ordinary block flow and works in narrow viewports without media queries.
-Newer browsers receive a sidebar float at 760px; IE6 keeps the stacked layout.
+uses block sections and compact, intrinsically sized navigation floats that
+wrap into rows without media queries. Search controls also share a row when
+space permits and wrap naturally when text is enlarged. Newer browsers receive
+a sidebar at 760px; IE6 retains the compact horizontal navigation and stacked
+content sections, so navigation does not consume the entire desktop viewport.
 No fixed minimum viewport, layout table, flexbox, CSS grid or CSS custom property
 is required. Corners are square; system fonts avoid a font download. The primary
 button uses the upstream darker accent for readable white text.
+
+Text uses relative `%`/`em` sizes so IE6's Text Size preference remains useful.
+Form widths reserve room for padding and borders, section heights are automatic,
+and long content/table cells can wrap. IE6's native `word-wrap` and inert
+`zoom: 1` layout flag support that wrapping; neither loads code or a resource.
+The layout does not use CSS expressions, external behaviors or JavaScript sizing.
 
 ## Runtime contract
 
@@ -131,6 +140,13 @@ canvas/VML/DOM selection, retained accessible text, preference and resource
 bounds, unsafe primitive rejection, build reproducibility and the CSS baseline.
 VML tests use an API stub; they do **not** execute Microsoft's rendering engine.
 Record real-browser/VM evidence separately before announcing compatibility.
+
+`tests/neonux-layout.browser.mjs` additionally removes every media query and
+checks navigation containment, visible desktop content, long unbroken content,
+tables and form controls at 320/480/1024px with 16/24/32px root text sizes. Run it
+with `node tests/neonux-layout.browser.mjs`; optionally set
+`CHROMIUM_EXECUTABLE` to an installed Chromium binary. This geometry stress test
+uses Chromium and remains separate from the native IE6 VM checks.
 
 Suggested manual matrix: IE6/XP, IE7/XP, IE8/Windows 7, a browser without canvas,
 current Firefox/Chromium, 320px viewport, keyboard-only navigation, scripts off,

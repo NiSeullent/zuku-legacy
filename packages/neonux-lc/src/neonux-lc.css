@@ -2,63 +2,76 @@
  * Modified adaptation of NeonUX semantic tokens. See NOTICE and vendor/LICENSE.
  * All {{token}} expressions compile to literals; none are shipped to browsers. */
 html { background: {{neon-canvas}}; color: {{neon-text-primary}}; }
-body { margin: 0; padding: 0; font: {{neon-text-sm}}/1.6 {{neon-font-retro}}; }
+/* 14/16 = 87.5%; relative text stays resizable through IE6 View > Text Size. */
+body { margin: 0; padding: 0; font: 87.5%/1.6 {{neon-font-retro}}; }
 a { color: {{neon-text-primary}}; text-decoration: underline; }
 a:hover, a:focus { color: {{neon-accent}}; }
 a:focus, input:focus, select:focus, textarea:focus, button:focus { outline: 2px solid {{neon-focus-color}}; outline-offset: 3px; }
 img { border: 0; max-width: 100%; height: auto; }
 form { margin: 0; }
-input, select, textarea, button { font: inherit; }
+input, select, textarea, button { font-family: {{neon-font-retro}}; font-size: 1em; line-height: 1.6; }
 h1, h2, h3, p, ul, ol { margin-top: 0; }
-h1 { margin-bottom: {{neon-space-2}}; font-size: {{neon-text-3xl}}; line-height: 1.3; }
-h2 { font-size: {{neon-text-xl}}; line-height: 1.4; }
-h3 { font-size: {{neon-text-lg}}; }
+h1 { margin-bottom: {{neon-space-2}}; font-size: 2.25em; line-height: 1.3; }
+h2 { font-size: 1.5em; line-height: 1.4; }
+h3 { font-size: 1.25em; }
 .lc-page { background: {{neon-canvas}}; color: {{neon-text-primary}}; }
-.lc-shell { margin: 0 auto; padding: 0 {{neon-space-6}}; max-width: 1160px; }
-.lc-skip { display: block; padding: {{neon-space-1}} {{neon-space-4}}; color: {{neon-text-secondary}}; font-size: {{neon-text-xs}}; }
-.lc-header { padding: {{neon-space-5}} 0; border-bottom: 1px solid {{neon-border-subtle}}; }
-.lc-brand { display: block; margin-bottom: {{neon-space-3}}; font: bold 28px/1.2 Arial, sans-serif; letter-spacing: 2px; text-decoration: none; }
+.lc-shell { margin: 0 auto; padding: 0 {{neon-space-3}}; max-width: 1160px; word-wrap: break-word; }
+.lc-skip { display: block; padding: {{neon-space-1}} {{neon-space-3}}; color: {{neon-text-secondary}}; font-size: 0.875em; }
+.lc-header { padding: {{neon-space-3}} 0 {{neon-space-2}}; border-bottom: 1px solid {{neon-border-subtle}}; }
+.lc-header p { margin-bottom: {{neon-space-2}}; }
+.lc-brand { display: block; margin-bottom: {{neon-space-2}}; font: bold 2em/1.2 Arial, sans-serif; letter-spacing: 2px; text-decoration: none; }
 .lc-brand-mark { color: {{neon-accent}}; }
-.lc-brand-small { margin-left: {{neon-space-2}}; color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; font-weight: normal; letter-spacing: 1px; }
-.lc-header-meta { margin: 0; color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; }
-.lc-header-actions { margin: {{neon-space-3}} 0 0; }
-.lc-layout { padding: {{neon-space-6}} 0; }
-.lc-sidebar { margin-bottom: {{neon-space-6}}; }
-.lc-nav { margin: 0; padding: 0; list-style: none; }
-.lc-nav li { margin: 0 0 {{neon-space-1}}; padding: 0; }
-.lc-nav a { display: block; padding: {{neon-space-3}} {{neon-space-4}}; border-left: 3px solid {{neon-border-subtle}}; text-decoration: none; color: {{neon-text-secondary}}; }
+.lc-brand-small { margin-left: {{neon-space-2}}; color: {{neon-text-muted}}; font-size: 0.5em; font-weight: normal; letter-spacing: 1px; }
+.lc-header-meta { margin: 0; color: {{neon-text-muted}}; font-size: 0.875em; }
+.lc-header-actions { margin: {{neon-space-2}} 0 0; }
+.lc-layout { padding: {{neon-space-4}} 0; }
+.lc-sidebar { margin-bottom: {{neon-space-4}}; }
+/* Intrinsic-width floats wrap even when media queries are unsupported. Width
+ * establishes IE6 hasLayout and contains the floats without scripts or hacks. */
+.lc-nav { width: 100%; overflow: hidden; margin: 0 0 {{neon-space-2}}; padding: 0; list-style: none; }
+.lc-nav li { float: left; display: inline; margin: 0 {{neon-space-1}} {{neon-space-1}} 0; padding: 0; }
+.lc-nav a { display: block; padding: 6px 10px; border-bottom: 2px solid {{neon-border-subtle}}; white-space: nowrap; word-wrap: normal; text-decoration: none; color: {{neon-text-secondary}}; }
 .lc-nav a:hover { background: {{neon-surface-muted}}; color: {{neon-text-primary}}; }
-.lc-nav .lc-active, .lc-nav a.lc-active { background: {{neon-surface-muted}}; border-left-color: {{neon-accent}}; color: {{neon-text-primary}}; font-weight: bold; }
-.lc-main { overflow: hidden; }
-.lc-eyebrow { margin-bottom: {{neon-space-2}}; color: {{neon-accent}}; font-size: {{neon-text-xs}}; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+.lc-nav .lc-active, .lc-nav a.lc-active { background: {{neon-surface-muted}}; border-bottom-color: {{neon-accent}}; color: {{neon-text-primary}}; font-weight: bold; }
+.lc-sidebar .lc-panel { clear: both; margin-bottom: 0; }
+.lc-sidebar .lc-panel-body { padding: {{neon-space-3}}; }
+.lc-sidebar .lc-panel-body p { margin-bottom: {{neon-space-1}}; }
+.lc-sidebar .lc-badge { display: inline; border: 0; padding: 0; }
+.lc-main { clear: both; }
+.lc-eyebrow { margin-bottom: {{neon-space-2}}; color: {{neon-accent}}; font-size: 0.875em; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
 .lc-intro { margin-bottom: {{neon-space-6}}; color: {{neon-text-secondary}}; }
-.lc-hero { margin-bottom: {{neon-space-6}}; padding: {{neon-space-5}} 0 {{neon-space-2}}; }
+.lc-hero { margin-bottom: {{neon-space-4}}; padding: {{neon-space-2}} 0; }
 .lc-hero p { color: {{neon-text-secondary}}; }
 .lc-hero .lc-eyebrow { color: {{neon-accent}}; }
 .lc-muted { color: {{neon-text-muted}}; }
-.lc-small { font-size: {{neon-text-xs}}; }
+.lc-small { font-size: 0.875em; }
 .lc-panel { margin-bottom: {{neon-space-5}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
-.lc-panel-header { padding: {{neon-space-4}} {{neon-space-5}}; border-bottom: 1px solid {{neon-border-subtle}}; }
-.lc-panel-title { margin: 0; font-size: {{neon-text-base}}; font-weight: bold; }
-.lc-panel-body { padding: {{neon-space-5}}; }
+.lc-panel-header { padding: {{neon-space-3}}; border-bottom: 1px solid {{neon-border-subtle}}; }
+.lc-panel-title { margin: 0; font-size: 1.125em; font-weight: bold; }
+.lc-panel-body { padding: {{neon-space-3}}; }
 .lc-panel-body p { margin-bottom: {{neon-space-3}}; }
-.lc-card-grid { overflow: hidden; }
-.lc-card { margin-bottom: {{neon-space-4}}; padding: {{neon-space-5}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
+.lc-card-grid { clear: both; }
+.lc-card { margin-bottom: {{neon-space-4}}; padding: {{neon-space-3}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
+/* IE6's native word-wrap needs hasLayout for long URLs and unbroken text.
+ * zoom:1 is an inert IE layout flag; other engines retain ordinary block flow. */
+.lc-panel, .lc-panel-body, .lc-card, .lc-main, .lc-notice, .lc-search { zoom: 1; word-wrap: break-word; }
 .lc-card h2, .lc-card h3 { margin-bottom: {{neon-space-2}}; }
 .lc-card p { margin-bottom: {{neon-space-4}}; color: {{neon-text-secondary}}; }
-.lc-card-index { margin-bottom: {{neon-space-4}}; color: {{neon-accent}}; font: bold 24px/1 Arial, sans-serif; }
-.lc-badge { padding: 3px 7px; border: 1px solid {{neon-border-strong}}; font-size: {{neon-text-xs}}; color: {{neon-text-secondary}}; white-space: nowrap; }
+.lc-card-index { margin-bottom: {{neon-space-4}}; color: {{neon-accent}}; font: bold 1.75em/1 Arial, sans-serif; }
+.lc-badge { padding: 3px 7px; border: 1px solid {{neon-border-strong}}; font-size: 0.875em; color: {{neon-text-secondary}}; }
+.lc-brand .lc-badge { font-size: 0.45em; white-space: nowrap; }
 .lc-badge-accent { border-color: {{neon-accent}}; color: {{neon-accent}}; }
-.lc-button { display: inline-block; margin: 0 {{neon-space-2}} {{neon-space-2}} 0; padding: 10px 16px; border: 1px solid {{neon-border-strong}}; background: {{neon-surface-muted}}; color: {{neon-text-primary}}; font-weight: bold; line-height: 1.6; text-align: center; text-decoration: none; cursor: pointer; }
+.lc-button { display: inline-block; max-width: 88%; margin: 0 {{neon-space-1}} {{neon-space-2}} 0; padding: 10px 12px; border: 1px solid {{neon-border-strong}}; background: {{neon-surface-muted}}; color: {{neon-text-primary}}; font-weight: bold; line-height: 1.6; white-space: normal; text-align: center; text-decoration: none; cursor: pointer; }
+.lc-panel-body a.lc-button { display: block; max-width: none; margin-right: 0; text-align: left; }
 .lc-button:hover, .lc-button:focus { border-color: {{neon-accent}}; color: {{neon-text-primary}}; }
 .lc-button-primary { border-color: {{neon-accent}}; background: {{neon-accent-hover}}; color: {{neon-text-on-accent}}; }
 .lc-button-primary:hover, .lc-button-primary:focus { background: {{neon-accent-hover}}; }
 .lc-label { display: block; margin-bottom: {{neon-space-2}}; font-weight: bold; }
-.lc-input { display: block; width: 90%; margin-bottom: {{neon-space-4}}; padding: 10px; border: 1px solid {{neon-border-strong}}; background: {{neon-canvas}}; color: {{neon-text-primary}}; }
+.lc-input { display: block; width: 90%; margin-bottom: {{neon-space-3}}; padding: 6px; border: 1px solid {{neon-border-strong}}; background: {{neon-canvas}}; color: {{neon-text-primary}}; }
 .lc-inline-form { margin-bottom: {{neon-space-4}}; }
-.lc-search { margin-bottom: {{neon-space-5}}; padding: {{neon-space-4}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
-.lc-search .lc-input { margin-bottom: {{neon-space-3}}; }
-.lc-search .lc-button { margin-bottom: 0; }
+.lc-search { overflow: hidden; margin-bottom: {{neon-space-4}}; padding: {{neon-space-3}}; border: 1px solid {{neon-border-subtle}}; background: {{neon-surface}}; }
+.lc-search .lc-input { float: left; width: 65%; margin: 0 {{neon-space-2}} {{neon-space-2}} 0; padding-top: 10px; padding-bottom: 10px; }
+.lc-search .lc-button { float: left; margin-bottom: {{neon-space-2}}; }
 .lc-pagination { clear: both; padding: {{neon-space-3}} 0; }
 .lc-notice { margin-bottom: {{neon-space-5}}; padding: {{neon-space-4}}; border: 1px solid {{neon-border-strong}}; border-left: 3px solid {{neon-accent}}; background: {{neon-surface-muted}}; color: {{neon-text-secondary}}; }
 .lc-notice p { margin: 0; }
@@ -67,10 +80,10 @@ h3 { font-size: {{neon-text-lg}}; }
 .lc-list { margin: 0; padding: 0; list-style: none; }
 .lc-list li { padding: {{neon-space-4}} 0; border-bottom: 1px solid {{neon-border-subtle}}; }
 .lc-list h2, .lc-list h3, .lc-list p { margin-bottom: {{neon-space-2}}; }
-.lc-data, .lc-table { width: 100%; border-collapse: collapse; }
-.lc-data th, .lc-data td, .lc-table th, .lc-table td { padding: {{neon-space-3}}; border-bottom: 1px solid {{neon-border-subtle}}; text-align: left; vertical-align: top; }
-.lc-data th, .lc-table th { color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; }
-.lc-footer { clear: both; margin-top: {{neon-space-6}}; padding: {{neon-space-5}} 0; border-top: 1px solid {{neon-border-subtle}}; color: {{neon-text-muted}}; font-size: {{neon-text-xs}}; }
+.lc-data, .lc-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+.lc-data th, .lc-data td, .lc-table th, .lc-table td { padding: {{neon-space-2}}; border-bottom: 1px solid {{neon-border-subtle}}; text-align: left; vertical-align: top; word-wrap: break-word; }
+.lc-data th, .lc-table th { color: {{neon-text-muted}}; font-size: 0.875em; }
+.lc-footer { clear: both; margin-top: {{neon-space-5}}; padding: {{neon-space-4}} 0; border-top: 1px solid {{neon-border-subtle}}; color: {{neon-text-muted}}; font-size: 0.875em; }
 .lc-footer a { color: {{neon-text-secondary}}; }
 .lc-clear { clear: both; }
 /* A stacked CSS2 baseline remains usable in IE6 and narrow classic viewports.
@@ -78,12 +91,13 @@ h3 { font-size: {{neon-text-lg}}; }
 @media screen and (min-width: 760px) {
   .lc-header { overflow: hidden; }
   .lc-sidebar { float: left; width: 190px; }
-  .lc-main { margin-left: 226px; }
+  .lc-nav li { float: none; display: block; margin-right: 0; }
+  .lc-main { clear: none; margin-left: 214px; }
 }
 @media screen and (max-width: 400px) {
   .lc-shell { padding-left: 12px; padding-right: 12px; }
   .lc-panel-body, .lc-card { padding: 14px; }
-  h1 { font-size: 26px; }
+  h1 { font-size: 1.875em; }
 }
 @media print {
   html, body, .lc-page, .lc-panel, .lc-card { background: white; color: black; }

@@ -3,63 +3,76 @@
  * Modified adaptation of NeonUX semantic tokens. See NOTICE and vendor/LICENSE.
  * All {{token}} expressions compile to literals; none are shipped to browsers. */
 html { background: #0f1115; color: #f5f5f5; }
-body { margin: 0; padding: 0; font: 14px/1.6 Dotum, Gulim, "Malgun Gothic", sans-serif; }
+/* 14/16 = 87.5%; relative text stays resizable through IE6 View > Text Size. */
+body { margin: 0; padding: 0; font: 87.5%/1.6 Dotum, Gulim, "Malgun Gothic", sans-serif; }
 a { color: #f5f5f5; text-decoration: underline; }
 a:hover, a:focus { color: #e91e63; }
 a:focus, input:focus, select:focus, textarea:focus, button:focus { outline: 2px solid #e91e63; outline-offset: 3px; }
 img { border: 0; max-width: 100%; height: auto; }
 form { margin: 0; }
-input, select, textarea, button { font: inherit; }
+input, select, textarea, button { font-family: Dotum, Gulim, "Malgun Gothic", sans-serif; font-size: 1em; line-height: 1.6; }
 h1, h2, h3, p, ul, ol { margin-top: 0; }
-h1 { margin-bottom: 8px; font-size: 32px; line-height: 1.3; }
-h2 { font-size: 21px; line-height: 1.4; }
-h3 { font-size: 18px; }
+h1 { margin-bottom: 8px; font-size: 2.25em; line-height: 1.3; }
+h2 { font-size: 1.5em; line-height: 1.4; }
+h3 { font-size: 1.25em; }
 .lc-page { background: #0f1115; color: #f5f5f5; }
-.lc-shell { margin: 0 auto; padding: 0 24px; max-width: 1160px; }
-.lc-skip { display: block; padding: 4px 16px; color: #cfcfcf; font-size: 12px; }
-.lc-header { padding: 20px 0; border-bottom: 1px solid #2a2f3a; }
-.lc-brand { display: block; margin-bottom: 12px; font: bold 28px/1.2 Arial, sans-serif; letter-spacing: 2px; text-decoration: none; }
+.lc-shell { margin: 0 auto; padding: 0 12px; max-width: 1160px; word-wrap: break-word; }
+.lc-skip { display: block; padding: 4px 12px; color: #cfcfcf; font-size: 0.875em; }
+.lc-header { padding: 12px 0 8px; border-bottom: 1px solid #2a2f3a; }
+.lc-header p { margin-bottom: 8px; }
+.lc-brand { display: block; margin-bottom: 8px; font: bold 2em/1.2 Arial, sans-serif; letter-spacing: 2px; text-decoration: none; }
 .lc-brand-mark { color: #e91e63; }
-.lc-brand-small { margin-left: 8px; color: #9e9e9e; font-size: 12px; font-weight: normal; letter-spacing: 1px; }
-.lc-header-meta { margin: 0; color: #9e9e9e; font-size: 12px; }
-.lc-header-actions { margin: 12px 0 0; }
-.lc-layout { padding: 24px 0; }
-.lc-sidebar { margin-bottom: 24px; }
-.lc-nav { margin: 0; padding: 0; list-style: none; }
-.lc-nav li { margin: 0 0 4px; padding: 0; }
-.lc-nav a { display: block; padding: 12px 16px; border-left: 3px solid #2a2f3a; text-decoration: none; color: #cfcfcf; }
+.lc-brand-small { margin-left: 8px; color: #9e9e9e; font-size: 0.5em; font-weight: normal; letter-spacing: 1px; }
+.lc-header-meta { margin: 0; color: #9e9e9e; font-size: 0.875em; }
+.lc-header-actions { margin: 8px 0 0; }
+.lc-layout { padding: 16px 0; }
+.lc-sidebar { margin-bottom: 16px; }
+/* Intrinsic-width floats wrap even when media queries are unsupported. Width
+ * establishes IE6 hasLayout and contains the floats without scripts or hacks. */
+.lc-nav { width: 100%; overflow: hidden; margin: 0 0 8px; padding: 0; list-style: none; }
+.lc-nav li { float: left; display: inline; margin: 0 4px 4px 0; padding: 0; }
+.lc-nav a { display: block; padding: 6px 10px; border-bottom: 2px solid #2a2f3a; white-space: nowrap; word-wrap: normal; text-decoration: none; color: #cfcfcf; }
 .lc-nav a:hover { background: #1e222b; color: #f5f5f5; }
-.lc-nav .lc-active, .lc-nav a.lc-active { background: #1e222b; border-left-color: #e91e63; color: #f5f5f5; font-weight: bold; }
-.lc-main { overflow: hidden; }
-.lc-eyebrow { margin-bottom: 8px; color: #e91e63; font-size: 12px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+.lc-nav .lc-active, .lc-nav a.lc-active { background: #1e222b; border-bottom-color: #e91e63; color: #f5f5f5; font-weight: bold; }
+.lc-sidebar .lc-panel { clear: both; margin-bottom: 0; }
+.lc-sidebar .lc-panel-body { padding: 12px; }
+.lc-sidebar .lc-panel-body p { margin-bottom: 4px; }
+.lc-sidebar .lc-badge { display: inline; border: 0; padding: 0; }
+.lc-main { clear: both; }
+.lc-eyebrow { margin-bottom: 8px; color: #e91e63; font-size: 0.875em; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
 .lc-intro { margin-bottom: 24px; color: #cfcfcf; }
-.lc-hero { margin-bottom: 24px; padding: 20px 0 8px; }
+.lc-hero { margin-bottom: 16px; padding: 8px 0; }
 .lc-hero p { color: #cfcfcf; }
 .lc-hero .lc-eyebrow { color: #e91e63; }
 .lc-muted { color: #9e9e9e; }
-.lc-small { font-size: 12px; }
+.lc-small { font-size: 0.875em; }
 .lc-panel { margin-bottom: 20px; border: 1px solid #2a2f3a; background: #171a21; }
-.lc-panel-header { padding: 16px 20px; border-bottom: 1px solid #2a2f3a; }
-.lc-panel-title { margin: 0; font-size: 16px; font-weight: bold; }
-.lc-panel-body { padding: 20px; }
+.lc-panel-header { padding: 12px; border-bottom: 1px solid #2a2f3a; }
+.lc-panel-title { margin: 0; font-size: 1.125em; font-weight: bold; }
+.lc-panel-body { padding: 12px; }
 .lc-panel-body p { margin-bottom: 12px; }
-.lc-card-grid { overflow: hidden; }
-.lc-card { margin-bottom: 16px; padding: 20px; border: 1px solid #2a2f3a; background: #171a21; }
+.lc-card-grid { clear: both; }
+.lc-card { margin-bottom: 16px; padding: 12px; border: 1px solid #2a2f3a; background: #171a21; }
+/* IE6's native word-wrap needs hasLayout for long URLs and unbroken text.
+ * zoom:1 is an inert IE layout flag; other engines retain ordinary block flow. */
+.lc-panel, .lc-panel-body, .lc-card, .lc-main, .lc-notice, .lc-search { zoom: 1; word-wrap: break-word; }
 .lc-card h2, .lc-card h3 { margin-bottom: 8px; }
 .lc-card p { margin-bottom: 16px; color: #cfcfcf; }
-.lc-card-index { margin-bottom: 16px; color: #e91e63; font: bold 24px/1 Arial, sans-serif; }
-.lc-badge { padding: 3px 7px; border: 1px solid #3d4452; font-size: 12px; color: #cfcfcf; white-space: nowrap; }
+.lc-card-index { margin-bottom: 16px; color: #e91e63; font: bold 1.75em/1 Arial, sans-serif; }
+.lc-badge { padding: 3px 7px; border: 1px solid #3d4452; font-size: 0.875em; color: #cfcfcf; }
+.lc-brand .lc-badge { font-size: 0.45em; white-space: nowrap; }
 .lc-badge-accent { border-color: #e91e63; color: #e91e63; }
-.lc-button { display: inline-block; margin: 0 8px 8px 0; padding: 10px 16px; border: 1px solid #3d4452; background: #1e222b; color: #f5f5f5; font-weight: bold; line-height: 1.6; text-align: center; text-decoration: none; cursor: pointer; }
+.lc-button { display: inline-block; max-width: 88%; margin: 0 4px 8px 0; padding: 10px 12px; border: 1px solid #3d4452; background: #1e222b; color: #f5f5f5; font-weight: bold; line-height: 1.6; white-space: normal; text-align: center; text-decoration: none; cursor: pointer; }
+.lc-panel-body a.lc-button { display: block; max-width: none; margin-right: 0; text-align: left; }
 .lc-button:hover, .lc-button:focus { border-color: #e91e63; color: #f5f5f5; }
 .lc-button-primary { border-color: #e91e63; background: #c2185b; color: #ffffff; }
 .lc-button-primary:hover, .lc-button-primary:focus { background: #c2185b; }
 .lc-label { display: block; margin-bottom: 8px; font-weight: bold; }
-.lc-input { display: block; width: 90%; margin-bottom: 16px; padding: 10px; border: 1px solid #3d4452; background: #0f1115; color: #f5f5f5; }
+.lc-input { display: block; width: 90%; margin-bottom: 12px; padding: 6px; border: 1px solid #3d4452; background: #0f1115; color: #f5f5f5; }
 .lc-inline-form { margin-bottom: 16px; }
-.lc-search { margin-bottom: 20px; padding: 16px; border: 1px solid #2a2f3a; background: #171a21; }
-.lc-search .lc-input { margin-bottom: 12px; }
-.lc-search .lc-button { margin-bottom: 0; }
+.lc-search { overflow: hidden; margin-bottom: 16px; padding: 12px; border: 1px solid #2a2f3a; background: #171a21; }
+.lc-search .lc-input { float: left; width: 65%; margin: 0 8px 8px 0; padding-top: 10px; padding-bottom: 10px; }
+.lc-search .lc-button { float: left; margin-bottom: 8px; }
 .lc-pagination { clear: both; padding: 12px 0; }
 .lc-notice { margin-bottom: 20px; padding: 16px; border: 1px solid #3d4452; border-left: 3px solid #e91e63; background: #1e222b; color: #cfcfcf; }
 .lc-notice p { margin: 0; }
@@ -68,10 +81,10 @@ h3 { font-size: 18px; }
 .lc-list { margin: 0; padding: 0; list-style: none; }
 .lc-list li { padding: 16px 0; border-bottom: 1px solid #2a2f3a; }
 .lc-list h2, .lc-list h3, .lc-list p { margin-bottom: 8px; }
-.lc-data, .lc-table { width: 100%; border-collapse: collapse; }
-.lc-data th, .lc-data td, .lc-table th, .lc-table td { padding: 12px; border-bottom: 1px solid #2a2f3a; text-align: left; vertical-align: top; }
-.lc-data th, .lc-table th { color: #9e9e9e; font-size: 12px; }
-.lc-footer { clear: both; margin-top: 24px; padding: 20px 0; border-top: 1px solid #2a2f3a; color: #9e9e9e; font-size: 12px; }
+.lc-data, .lc-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+.lc-data th, .lc-data td, .lc-table th, .lc-table td { padding: 8px; border-bottom: 1px solid #2a2f3a; text-align: left; vertical-align: top; word-wrap: break-word; }
+.lc-data th, .lc-table th { color: #9e9e9e; font-size: 0.875em; }
+.lc-footer { clear: both; margin-top: 20px; padding: 16px 0; border-top: 1px solid #2a2f3a; color: #9e9e9e; font-size: 0.875em; }
 .lc-footer a { color: #cfcfcf; }
 .lc-clear { clear: both; }
 /* A stacked CSS2 baseline remains usable in IE6 and narrow classic viewports.
@@ -79,12 +92,13 @@ h3 { font-size: 18px; }
 @media screen and (min-width: 760px) {
   .lc-header { overflow: hidden; }
   .lc-sidebar { float: left; width: 190px; }
-  .lc-main { margin-left: 226px; }
+  .lc-nav li { float: none; display: block; margin-right: 0; }
+  .lc-main { clear: none; margin-left: 214px; }
 }
 @media screen and (max-width: 400px) {
   .lc-shell { padding-left: 12px; padding-right: 12px; }
   .lc-panel-body, .lc-card { padding: 14px; }
-  h1 { font-size: 26px; }
+  h1 { font-size: 1.875em; }
 }
 @media print {
   html, body, .lc-page, .lc-panel, .lc-card { background: white; color: black; }

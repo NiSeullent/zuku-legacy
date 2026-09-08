@@ -80,12 +80,14 @@ TLS를 직접 사용할 수 없는 브라우저는 같은 기기의 `http://127.
 npm run check                      # TypeScript, API/보안/ES3 테스트, 크기 예산
 npx playwright install chromium
 npm run test:browser               # Chromium 320/390/1024/1440px, JS on/off
+npm run test:layout                # 미디어 query 없이 너비·글자 크기·긴 내용 9개 조합
 npm run test:live                  # 기존 API 읽기 전용 계약 검사
 ```
 
-브라우저 검사는 고정된 테스트 자료를 사용하며 `artifacts/`에 결과와 이미지를 저장합니다. 실제 API 검사는 공개 읽기만 수행합니다. 자동화에는 실제 IE6 엔진이 포함되지 않으며, DOM/VML 테스트 대역을 IE6 실기기 결과로 간주하지 않습니다. [호환성 검증표](docs/compatibility.md)에 테스트 범위와 출시 조건을 기록합니다.
+브라우저 검사는 고정된 테스트 자료를 사용하며 `artifacts/`에 결과와 이미지를 저장합니다. 실제 API 검사는 공개 읽기만 수행합니다. npm의 브라우저 자동화는 Chromium을 사용하며, DOM/VML 테스트 대역을 IE6 실기기 결과로 간주하지 않습니다. [호환성 검증표](docs/compatibility.md)에 테스트 범위와 출시 조건을 기록합니다.
 
-실제 엔진을 위한 별도 [IE6 VM 검증 환경](docs/ie6-vm.md)과 [QMP 콘솔 도구](scripts/vm/README.md)를 제공합니다. Windows 설치 이미지와 VM 디스크는 저장소에 배포하지 않습니다.
+별도로 VM을 새로 설치해 **실제 IE 6.0.3790.3959**에서 320·480·800·1024px, 가장 큰 글자, 스크립트 비활성 상태의 탐색·한글 검색·레이아웃을 검증했습니다. [IE6 VM 실행 기록](docs/ie6-vm.md)과 [QMP 콘솔 도구](scripts/vm/README.md)를 제공합니다. Windows 설치 이미지와 VM 디스크는 저장소에 배포하지 않습니다.
+로컬 검사 결과와 GitHub 실행 상태는 [검증 기록](docs/validation.md)을 확인하세요.
 
 ## 구조와 라이선스
 

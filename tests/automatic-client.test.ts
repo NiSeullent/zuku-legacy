@@ -73,8 +73,8 @@ test('IE6 opens the ordinary homepage with canonical navigation and internal enh
   assert.ok(html.includes('href="/login"'));
   assert.ok(html.includes('action="/search"'));
   noInternalNavigation(html);
-  assert.match(html, /<link[^>]+href="\/legacy\/assets\/neonux-lc\.css"/);
-  assert.match(html, /<script[^>]+src="\/legacy\/assets\/neonux-lc\.js"/);
+  assert.match(html, /<link[^>]+href="\/legacy\/assets\/neonux-lc\.css\?v=[a-f0-9]{64}"/);
+  assert.match(html, /<script[^>]+src="\/legacy\/assets\/neonux-lc\.js\?v=[a-f0-9]{64}"/);
   assert.equal(app.calls[0]!.url.pathname, '/api/v1/feeds');
   assert.equal(app.calls[0]!.authorization, null);
   for (const path of ['/legacy/assets/neonux-lc.css', '/legacy/assets/neonux-lc.js']) {
