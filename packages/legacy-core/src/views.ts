@@ -62,6 +62,32 @@ export function threadCard(ctx: ViewContext, value: unknown, detail = false): st
 
 type MediaKind = 'video' | 'audio';
 interface MediaSource { url: string; mime?: string }
+function legacyMediaUrl(value: unknown, thumbnail = false): string | undefined {
+  const safe = safeHttpUrl(value);
+  if (!safe) return undefined;
+  try {
+    const parsed = new URL(safe);
+    const match = parsed.hostname.toLowerCase() === 'api.zuzunza.com' && parsed.pathname.match(/^\/gateway\/myflash\/(\d+)(?:\.swf)?$/i);
+    if (!match) return safe;
+    const id = Number(match[1]);
+    if (!Number.isSafeInteger(id) || id < 1) return undefined;
+    let directory = 'swf';
+    if (id <= 50_000) directory = 'pre_swf/01';
+    else if (id <= 100_000) directory = 'pre_swf/02';
+    else if (id <= 150_000) directory = 'pre_swf/03';
+    else if (id <= 200_000) directory = 'pre_swf/04';
+    else if (id <= 250_000) directory = 'pre_swf/05';
+    else if (id <= 300_000) directory = 'pre_swf/06';
+    else if (id <= 350_000) directory = 'pre_swf/07';
+    else if (id <= 400_000) directory = 'pre_swf/08';
+    else if (id <= 450_000) directory = 'pre_swf/09';
+    else if (id <= 500_000) directory = 'pre_swf/10';
+    const objectKey = `myflash/${directory}/${id}.swf`;
+    return thumbnail || /[?&]kind=thumbnail(?:&|$)/i.test(parsed.search)
+      ? `https://www.zuzunza.com/xpi/api/media/thumbnail?key=${encodeURIComponent(objectKey)}`
+      : `https://cdn.zuzunza.com/${objectKey}`;
+  } catch { return undefined; }
+}
 function mediaExtension(value: string): string {
   try {
     const pathname = new URL(value).pathname.toLowerCase();
@@ -92,8 +118,8 @@ function mediaKind(value: Record<string, unknown>, sources: MediaSource[]): Medi
 function mediaSources(value: Record<string, unknown>): MediaSource[] {
   const sources: MediaSource[] = [];
   const conversion = obj(value.conversion);
-  const playback = conversion.status === 'ready' ? safeHttpUrl(conversion.playback_url) : undefined;
-  const original = safeHttpUrl(value.media_url);
+  const playback = conversion.status === 'ready' ? legacyMediaUrl(conversion.playback_url) : undefined;
+  const original = legacyMediaUrl(value.media_url);
   for (const url of [playback, original]) {
     if (url && !sources.some(source => source.url === url)) sources.push({ url, mime: mediaMime(url) });
   }
@@ -110,7 +136,7 @@ function mediaFallback(source: MediaSource, kind: MediaKind): string {
 function mediaPlayer(value: Record<string, unknown>): string {
   const sources = mediaSources(value), kind = mediaKind(value, sources);
   if (!kind || !sources.length) return '';
-  const conversion = obj(value.conversion), poster = safeHttpUrl(conversion.poster_url) || safeHttpUrl(value.thumbnail_url);
+  const conversion = obj(value.conversion), poster = legacyMediaUrl(conversion.poster_url, true) || legacyMediaUrl(value.thumbnail_url, true);
   const sourceTags = sources.map(source => `<source src="${e(source.url)}"${source.mime ? ` type="${e(source.mime)}"` : ''}>`).join('');
   const fallback = mediaFallback(sources[0]!, kind);
   if (kind === 'audio') return `<div class="lc-media lc-media-audio-wrap"><audio class="lc-media-audio" controls="controls" preload="none">${sourceTags}${fallback}</audio></div>`;
@@ -119,7 +145,7 @@ function mediaPlayer(value: Record<string, unknown>): string {
 export function contentDetail(ctx: ViewContext, value: unknown): string {
   const c = obj(value), creator = obj(c.creator), id = String(c.id || '');
   const permitted = c.can_view_full !== false && c.body_masked !== true;
-  const media = permitted ? safeHttpUrl(c.media_url) : undefined, thumbnail = permitted ? safeHttpUrl(c.thumbnail_url) : undefined;
+  const media = permitted ? legacyMediaUrl(c.media_url) : undefined, thumbnail = permitted ? legacyMediaUrl(c.thumbnail_url, true) : undefined;
   const actions = form(ctx, 'like-content', c.is_liked ? '좋아요 전환' : '좋아요', {id}) + form(ctx, 'bookmark', '보관함에 추가 / 해제', {id}) + form(ctx, 'comment', '댓글 남기기', {id}, {label:'댓글',max:1000});
   const player = permitted ? mediaPlayer(c) : '';
   return intro(String(c.title || '창작물'), String(creator.display_name || creator.handle || 'ZUKU 창작자')) + panel('작품 소개', `<p>${permitted ? paragraph(c.description) : '이 작품은 현재 공개된 정보만 표시합니다.'}</p><p class="lc-muted">${text(c.category)} · ${text(c.type)}</p>${player}${media && !player ? `<p><a class="lc-button" href="${e(media)}">미디어 파일 열기</a></p>` : ''}${thumbnail ? `<p><a href="${e(thumbnail)}">대표 이미지 열기</a></p>` : ''}`) + actionPanel(ctx, '함께하기', actions);

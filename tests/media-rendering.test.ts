@@ -50,3 +50,15 @@ test('media URLs are still filtered and masked content emits no player or privat
   assert.doesNotMatch(masked, /<video|<audio|<object|private\.mp4/);
   assert.doesNotMatch(masked, /private description/);
 });
+
+test('dead myflash gateway media is rewritten to the existing CDN contract', () => {
+  const html = contentDetail(context, {
+    id: 'flash-1', category: 'jump', type: 'game', title: '옛 게임', description: '', creator,
+    media_url: 'https://api.zuzunza.com/gateway/myflash/50001.swf',
+    thumbnail_url: 'https://api.zuzunza.com/gateway/myflash/50001.swf?kind=thumbnail'
+  });
+
+  assert.match(html, /https:\/\/cdn\.zuzunza\.com\/myflash\/pre_swf\/02\/50001\.swf/);
+  assert.match(html, /https:\/\/www\.zuzunza\.com\/xpi\/api\/media\/thumbnail\?key=myflash%2Fpre_swf%2F02%2F50001\.swf/);
+  assert.doesNotMatch(html, /api\.zuzunza\.com\/gateway\/myflash/);
+});
