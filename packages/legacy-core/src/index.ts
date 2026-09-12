@@ -101,7 +101,7 @@ export function createLegacyApp(options: LegacyOptions) {
       'X-UA-Compatible': 'IE=edge',
       'X-Frame-Options': 'DENY',
       'Referrer-Policy': 'no-referrer',
-      'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+      'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https:; media-src https:; object-src https:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
     });
     const html = (title: string, body: string, status = 200) => new Response(request.method === 'HEAD' ? null : v.document(ctx, title, body), {status, headers});
     const json = (value: unknown, status = 200) => { headers.set('Content-Type','application/json; charset=utf-8'); return new Response(JSON.stringify(value),{status,headers}); };

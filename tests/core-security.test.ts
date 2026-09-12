@@ -213,6 +213,42 @@ test('content visibility flags prevent rendering full body or protected media li
   }
 });
 
+test('media details prefer canonical conversion playback and retain a classic object fallback', async () => {
+  const app = harness((call) => call.url.pathname.endsWith('/comments') ? ok({ comments: [], pagination }) : ok({
+    content: {
+      id: 'cnt_media', category: 'hype', type: 'horizontal_media', title: '변환된 영상',
+      creator: { display_name: '작가' }, description: '공개 영상',
+      media_url: 'https://cdn.example.test/source.mov',
+      thumbnail_url: 'https://cdn.example.test/poster.jpg',
+      conversion: { status: 'ready', playback_url: 'https://media.example.test/playback.mp4', poster_url: 'https://media.example.test/poster.jpg' }
+    }
+  }));
+  const response = await app.handle(request('/content/cnt_media'));
+  const body = await response.text();
+  assert.equal(response.status, 200);
+  assert.match(body, /<video[^>]+controls="controls"/);
+  assert.ok(body.indexOf('https://media.example.test/playback.mp4') < body.indexOf('https://cdn.example.test/source.mov'), 'converted playback should be the first source');
+  assert.match(body, /<object class="lc-media-object"/);
+  assert.match(body, /미디어 파일 열기/);
+  assert.equal(response.headers.get('content-security-policy')?.includes('media-src https:'), true);
+  assert.equal(response.headers.get('content-security-policy')?.includes('object-src https:'), true);
+});
+
+test('audio details use the same source policy and legacy player fallback', async () => {
+  const app = harness((call) => call.url.pathname.endsWith('/comments') ? ok({ comments: [], pagination }) : ok({
+    content: {
+      id: 'cnt_audio', category: 'vine', type: 'audio_track', title: '짧은 목소리',
+      creator: { display_name: '작가' }, description: '공개 음원',
+      media_url: 'https://cdn.example.test/voice.mp3', thumbnail_url: ''
+    }
+  }));
+  const response = await app.handle(request('/content/cnt_audio'));
+  const body = await response.text();
+  assert.match(body, /<audio[^>]+controls="controls"/);
+  assert.match(body, /<object class="lc-media-object"[^>]+type="audio\/mpeg"/);
+  assert.match(body, /https:\/\/cdn\.example\.test\/voice\.mp3/);
+});
+
 test('malformed paths, oversized forms and unsupported methods fail with client status codes', async () => {
   const app = harness();
   for (const path of ['/content/%E0%A4%A', '/thread/%FF', '/profile/%']) {

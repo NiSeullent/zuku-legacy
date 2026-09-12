@@ -59,12 +59,70 @@ export function threadCard(ctx: ViewContext, value: unknown, detail = false): st
   const p = obj(value), author = obj(p.author || p.creator), stats = obj(p.stats), id = String(p.id || '');
   return `<div class="lc-card"><p class="lc-eyebrow">THREAD <span class="lc-muted">${text(String(p.created_at || '').slice(0, 16).replace('T', ' '))}</span></p><h2>${text(author.display_name || author.handle || 'ZUKU 사용자')}</h2><p>${paragraph(p.body, 5000)}</p><p class="lc-muted">좋아요 ${text(p.like_count ?? stats.like_count ?? 0)} · 답글 ${text(p.reply_count ?? stats.reply_count ?? 0)}</p>${detail ? form(ctx, 'like-post', p.is_liked ? '좋아요 취소' : '좋아요', {id, liked:p.is_liked ? '0' : '1'}) : link(ctx, '/thread/' + encodeURIComponent(id), '대화 열기', 'lc-button')}</div>`;
 }
+
+type MediaKind = 'video' | 'audio';
+interface MediaSource { url: string; mime?: string }
+function mediaExtension(value: string): string {
+  try {
+    const pathname = new URL(value).pathname.toLowerCase();
+    const match = pathname.match(/\.([a-z0-9]{2,8})$/);
+    return match?.[1] || '';
+  } catch { return ''; }
+}
+function mediaMime(value: string): string | undefined {
+  return ({
+    jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp',
+    mp4: 'video/mp4', m4v: 'video/mp4', webm: 'video/webm', ogv: 'video/ogg', mov: 'video/quicktime',
+    flv: 'video/x-flv', swf: 'application/x-shockwave-flash',
+    mp3: 'audio/mpeg', m4a: 'audio/mp4', wav: 'audio/wav', ogg: 'audio/ogg', oga: 'audio/ogg',
+    webma: 'audio/webm', wma: 'audio/x-ms-wma', asf: 'video/x-ms-asf', wmv: 'video/x-ms-wmv'
+  } as Record<string, string>)[mediaExtension(value)];
+}
+function mediaKind(value: Record<string, unknown>, sources: MediaSource[]): MediaKind | undefined {
+  const extensionMimes = sources.map(source => source.mime).filter(Boolean) as string[];
+  if (extensionMimes.some(mime => mime.startsWith('audio/'))) return 'audio';
+  if (extensionMimes.some(mime => mime.startsWith('video/'))) return 'video';
+  if (extensionMimes.some(mime => mime.startsWith('image/'))) return undefined;
+  const type = String(value.type || '').toLowerCase();
+  if (/(image|photo|picture)/.test(type)) return undefined;
+  if (/(audio|voice|music|sound)/.test(type) || String(value.category || '').toLowerCase() === 'vine') return 'audio';
+  if (/(video|media|movie|animation)/.test(type) || ['hype', 'swipe'].includes(String(value.category || '').toLowerCase())) return 'video';
+  return undefined;
+}
+function mediaSources(value: Record<string, unknown>): MediaSource[] {
+  const sources: MediaSource[] = [];
+  const conversion = obj(value.conversion);
+  const playback = conversion.status === 'ready' ? safeHttpUrl(conversion.playback_url) : undefined;
+  const original = safeHttpUrl(value.media_url);
+  for (const url of [playback, original]) {
+    if (url && !sources.some(source => source.url === url)) sources.push({ url, mime: mediaMime(url) });
+  }
+  return sources;
+}
+function mediaFallback(source: MediaSource, kind: MediaKind): string {
+  const mime = source.mime || (kind === 'video' ? 'video/mp4' : 'audio/mpeg');
+  const height = kind === 'video' ? '240' : '64';
+  // IE6–8 cannot decode HTML5 media. The object/embed path lets an installed
+  // Windows Media or Flash player use the same approved URL; the link remains
+  // useful when no plugin is present and does not claim that decoding is local.
+  return `<object class="lc-media-object" data="${e(source.url)}" type="${e(mime)}" width="100%" height="${height}"><param name="src" value="${e(source.url)}"><param name="URL" value="${e(source.url)}"><param name="autoStart" value="0"><param name="ShowControls" value="1"><embed src="${e(source.url)}" type="${e(mime)}" width="100%" height="${height}" autostart="0" showcontrols="1"></embed><a class="lc-button lc-media-fallback" href="${e(source.url)}">미디어 파일 열기</a></object>`;
+}
+function mediaPlayer(value: Record<string, unknown>): string {
+  const sources = mediaSources(value), kind = mediaKind(value, sources);
+  if (!kind || !sources.length) return '';
+  const conversion = obj(value.conversion), poster = safeHttpUrl(conversion.poster_url) || safeHttpUrl(value.thumbnail_url);
+  const sourceTags = sources.map(source => `<source src="${e(source.url)}"${source.mime ? ` type="${e(source.mime)}"` : ''}>`).join('');
+  const fallback = mediaFallback(sources[0]!, kind);
+  if (kind === 'audio') return `<div class="lc-media lc-media-audio-wrap"><audio class="lc-media-audio" controls="controls" preload="none">${sourceTags}${fallback}</audio></div>`;
+  return `<div class="lc-media lc-media-video-wrap"><video class="lc-media-video" controls="controls" preload="none"${poster ? ` poster="${e(poster)}"` : ''}>${sourceTags}${fallback}</video></div>`;
+}
 export function contentDetail(ctx: ViewContext, value: unknown): string {
   const c = obj(value), creator = obj(c.creator), id = String(c.id || '');
   const permitted = c.can_view_full !== false && c.body_masked !== true;
   const media = permitted ? safeHttpUrl(c.media_url) : undefined, thumbnail = permitted ? safeHttpUrl(c.thumbnail_url) : undefined;
   const actions = form(ctx, 'like-content', c.is_liked ? '좋아요 전환' : '좋아요', {id}) + form(ctx, 'bookmark', '보관함에 추가 / 해제', {id}) + form(ctx, 'comment', '댓글 남기기', {id}, {label:'댓글',max:1000});
-  return intro(String(c.title || '창작물'), String(creator.display_name || creator.handle || 'ZUKU 창작자')) + panel('작품 소개', `<p>${permitted ? paragraph(c.description) : '이 작품은 현재 공개된 정보만 표시합니다.'}</p><p class="lc-muted">${text(c.category)} · ${text(c.type)}</p>${media ? `<p><a class="lc-button" href="${e(media)}">미디어 파일 열기</a></p>` : ''}${thumbnail ? `<p><a href="${e(thumbnail)}">대표 이미지 열기</a></p>` : ''}`) + actionPanel(ctx, '함께하기', actions);
+  const player = permitted ? mediaPlayer(c) : '';
+  return intro(String(c.title || '창작물'), String(creator.display_name || creator.handle || 'ZUKU 창작자')) + panel('작품 소개', `<p>${permitted ? paragraph(c.description) : '이 작품은 현재 공개된 정보만 표시합니다.'}</p><p class="lc-muted">${text(c.category)} · ${text(c.type)}</p>${player}${media && !player ? `<p><a class="lc-button" href="${e(media)}">미디어 파일 열기</a></p>` : ''}${thumbnail ? `<p><a href="${e(thumbnail)}">대표 이미지 열기</a></p>` : ''}`) + actionPanel(ctx, '함께하기', actions);
 }
 export function comments(list: unknown[]): string {
   return panel('댓글', list.length ? list.slice(0, 12).map(value => {const c = obj(value), a = obj(c.author || c.user); return `<div class="lc-card"><p><strong>${text(a.display_name || a.handle || 'ZUKU 사용자')}</strong></p><p>${paragraph(c.body,1000)}</p></div>`;}).join('') : '<p>첫 댓글을 남겨 보세요.</p>');

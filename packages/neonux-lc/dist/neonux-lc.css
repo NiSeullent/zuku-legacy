@@ -58,6 +58,12 @@ h3 { font-size: 1.25em; }
 .lc-panel, .lc-panel-body, .lc-card, .lc-main, .lc-notice, .lc-search { zoom: 1; word-wrap: break-word; }
 .lc-card h2, .lc-card h3 { margin-bottom: 8px; }
 .lc-card p { margin-bottom: 16px; color: #cfcfcf; }
+.lc-media { clear: both; margin: 16px 0; padding: 8px; border: 1px solid #2a2f3a; background: #0f1115; text-align: center; zoom: 1; }
+.lc-media-video, .lc-media-object { display: block; width: 100%; max-width: 100%; margin: 0 auto; }
+.lc-media-video { height: auto; min-height: 180px; background: #000; }
+.lc-media-audio { display: block; width: 100%; margin: 0 auto; }
+.lc-media-fallback { display: block; margin: 8px auto 0; text-align: left; }
+.lc-media object, .lc-media embed { max-width: 100%; }
 .lc-card-index { margin-bottom: 16px; color: #e91e63; font: bold 1.75em/1 Arial, sans-serif; }
 .lc-badge { padding: 3px 7px; border: 1px solid #3d4452; font-size: 0.875em; color: #cfcfcf; }
 .lc-brand .lc-badge { font-size: 0.45em; white-space: nowrap; }
