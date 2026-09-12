@@ -62,3 +62,11 @@ test('dead myflash gateway media is rewritten to the existing CDN contract', () 
   assert.match(html, /https:\/\/www\.zuzunza\.com\/xpi\/api\/media\/thumbnail\?key=myflash%2Fpre_swf%2F02%2F50001\.swf/);
   assert.doesNotMatch(html, /api\.zuzunza\.com\/gateway\/myflash/);
 });
+
+test('known relative media gateway paths are promoted to the canonical media origin', () => {
+  const html = contentDetail(context, {
+    id: 'relative-media', category: 'hype', type: 'horizontal_media', title: '상대 경로', description: '', creator,
+    media_url: '/xpi/api/minio/object?key=video%2Fdemo.mp4'
+  });
+  assert.match(html, /https:\/\/www\.zuzunza\.com\/xpi\/api\/minio\/object\?key=video%2Fdemo\.mp4/);
+});

@@ -62,8 +62,12 @@ export function threadCard(ctx: ViewContext, value: unknown, detail = false): st
 
 type MediaKind = 'video' | 'audio';
 interface MediaSource { url: string; mime?: string }
+function safeMediaHttpUrl(value: unknown): string | undefined {
+  if (typeof value === 'string' && value.trim().startsWith('/xpi/')) return safeHttpUrl(`https://www.zuzunza.com${value.trim()}`);
+  return safeHttpUrl(value);
+}
 function legacyMediaUrl(value: unknown, thumbnail = false): string | undefined {
-  const safe = safeHttpUrl(value);
+  const safe = safeMediaHttpUrl(value);
   if (!safe) return undefined;
   try {
     const parsed = new URL(safe);
